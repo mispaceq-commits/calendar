@@ -1,0 +1,44 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body,
+#root {
+  height: 100%;
+  width: 100%;
+}
+
+body {
+  overflow: hidden;
+  background: #ffffff;
+  color: #000000;
+  -webkit-font-smoothing: antialiased;
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+.rich-text {
+  column-count: 2;
+  column-gap: 1.25rem;
+  column-fill: auto;
+  height: 100%;
+  overflow: hidden;
+  font-size: 0.78rem;
+  line-height: 1.35;
+}
+
+.rich-text p {
+  margin: 0 0 0.6rem 0;
+  break-inside: avoid;
+}
+
+.rich-text h2 {
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin: 0 0 0.4rem 0;
+  break-after: avoid;
+}
+
+.rich-text strong {
+  font-weight: 700;
+}
