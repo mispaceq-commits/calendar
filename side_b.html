@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Белый Гриб — Меню дня | Сторона Б</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Raleway:wght@300;400;500;600;700&family=Caveat:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --cream: #FFF8F0;
+      --warm-brown: #5C3D2E;
+      --accent-orange: #E8822A;
+      --accent-gold: #D4A843;
+      --forest-green: #3A6B35;
+      --light-green: #7FB069;
+      --soft-beige: #F5E6D3;
+      --dark-text: #2C1810;
+      --muted: #8B7355;
+    }
+
+    html { font-size: 16px; }
+
+    body {
+      font-family: 'Raleway', sans-serif;
+      background: var(--cream);
+      color: var(--dark-text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      overflow-x: hidden;
+    }
+
+    /* ─── штендер-рамка ─── */
+    .stand {
+      width: 100%;
+      max-width: 520px;
+      min-height: 100vh;
+      background: linear-gradient(175deg, #fffdf9 0%, var(--cream) 40%, var(--soft-beige) 100%);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .stand::before {
+      content: '';
+      position: absolute;
+      inset: 12px;
+      border: 2px solid var(--accent-gold);
+      border-radius: 18px;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    /* ─── верхняя лента ─── */
+    .top-ribbon {
+      background: linear-gradient(135deg, var(--accent-orange), #D4763A);
+      padding: 14px 0;
+      text-align: center;
+      position: relative;
+      z-index: 3;
+    }
+
+    .top-ribbon span {
+      font-family: 'Caveat', cursive;
+      color: #fff;
+      font-size: 1.1rem;
+      letter-spacing: 3px;
+      font-weight: 700;
+    }
+
+    /* ─── контент ─── */
+    .content {
+      padding: 40px 36px 24px;
+      flex: 1;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ─── заголовок меню ─── */
+    .menu-header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .menu-header .label {
+      font-family: 'Caveat', cursive;
+      font-size: 1.15rem;
+      color: var(--accent-orange);
+      font-weight: 600;
+      letter-spacing: 2px;
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .menu-header h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.4rem;
+      font-weight: 900;
+      color: var(--warm-brown);
+      line-height: 1.15;
+      margin-bottom: 6px;
+    }
+
+    .menu-header .date {
+      font-size: 0.85rem;
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    .divider {
+      width: 60px;
+      height: 3px;
+      background: linear-gradient(to right, var(--accent-gold), var(--accent-orange));
+      margin: 0 auto 32px;
+      border-radius: 3px;
+    }
+
+    /* ─── изображение ─── */
+    .hero-image {
+      width: calc(100% + 24px);
+      margin: 0 -12px 32px;
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 8px 32px rgba(44, 24, 16, 0.12);
+      position: relative;
+    }
+
+    .hero-image img {
+      width: 100%;
+      height: 240px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .hero-image::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 50px;
+      background: linear-gradient(transparent, rgba(255, 248, 240, 0.8));
+    }
+
+    /* ─── секция меню ─── */
+    .menu-section {
+      margin-bottom: 28px;
+    }
+
+    .menu-section h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--forest-green);
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .menu-section h2 .emoji {
+      font-size: 1.3rem;
+    }
+
+    .menu-section h2::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(to right, rgba(58, 107, 53, 0.2), transparent);
+      margin-left: 8px;
+    }
+
+    /* ─── пункт меню ─── */
+    .menu-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding: 10px 0;
+      border-bottom: 1px dotted rgba(139, 115, 85, 0.2);
+    }
+
+    .menu-item:last-child {
+      border-bottom: none;
+    }
+
+    .menu-item .name {
+      font-weight: 600;
+      font-size: 0.92rem;
+      color: var(--dark-text);
+      flex: 1;
+    }
+
+    .menu-item .desc {
+      font-size: 0.78rem;
+      color: var(--muted);
+      display: block;
+      margin-top: 2px;
+      font-weight: 400;
+    }
+
+    .menu-item .dots {
+      flex: 1;
+      border-bottom: 1px dotted rgba(139, 115, 85, 0.3);
+      margin: 0 8px;
+      min-width: 20px;
+      align-self: end;
+      margin-bottom: 4px;
+    }
+
+    .menu-item .price {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--accent-orange);
+      white-space: nowrap;
+    }
+
+    /* ─── спец-предложение ─── */
+    .special-offer {
+      background: linear-gradient(135deg, var(--forest-green), var(--light-green));
+      border-radius: 16px;
+      padding: 24px;
+      text-align: center;
+      color: #fff;
+      margin: 8px 0 28px;
+      box-shadow: 0 6px 24px rgba(58, 107, 53, 0.25);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .special-offer::before {
+      content: '';
+      position: absolute;
+      top: -20px;
+      left: -20px;
+      width: 80px;
+      height: 80px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 50%;
+    }
+
+    .special-offer::after {
+      content: '';
+      position: absolute;
+      bottom: -30px;
+      right: -10px;
+      width: 100px;
+      height: 100px;
+      background: rgba(255, 255, 255, 0.06);
+      border-radius: 50%;
+    }
+
+    .special-offer .badge {
+      display: inline-block;
+      background: rgba(255, 255, 255, 0.2);
+      padding: 4px 14px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+      position: relative;
+    }
+
+    .special-offer h3 {
+      font-family: 'Caveat', cursive;
+      font-size: 1.5rem;
+      margin-bottom: 6px;
+      position: relative;
+    }
+
+    .special-offer p {
+      font-size: 0.88rem;
+      opacity: 0.9;
+      line-height: 1.5;
+      position: relative;
+    }
+
+    .special-offer .special-price {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem;
+      font-weight: 900;
+      margin-top: 8px;
+      position: relative;
+    }
+
+    /* ─── напитки-компаньоны ─── */
+    .drinks-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 28px;
+    }
+
+    .drink-card {
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(6px);
+      border: 1px solid rgba(212, 168, 67, 0.2);
+      border-radius: 12px;
+      padding: 16px 10px;
+      text-align: center;
+    }
+
+    .drink-card .emoji {
+      font-size: 1.6rem;
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .drink-card .name {
+      font-weight: 600;
+      font-size: 0.78rem;
+      color: var(--dark-text);
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .drink-card .price {
+      font-family: 'Playfair Display', serif;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--accent-orange);
+    }
+
+    /* ─── нижние контакты ─── */
+    .bottom-info {
+      text-align: center;
+      padding-top: 20px;
+      border-top: 1px solid rgba(212, 168, 67, 0.25);
+    }
+
+    .bottom-info .wifi {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--soft-beige);
+      padding: 8px 18px;
+      border-radius: 20px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--warm-brown);
+      margin-bottom: 12px;
+    }
+
+    .bottom-info .social {
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+
+    .bottom-info .social a {
+      color: var(--forest-green);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    /* ─── нижняя полоса ─── */
+    .bottom-bar {
+      background: var(--warm-brown);
+      padding: 16px 0;
+      text-align: center;
+      margin-top: auto;
+    }
+
+    .bottom-bar span {
+      font-family: 'Caveat', cursive;
+      color: var(--accent-gold);
+      font-size: 0.95rem;
+      letter-spacing: 2px;
+    }
+
+    /* ─── декор ─── */
+    .deco {
+      position: absolute;
+      opacity: 0.05;
+      z-index: 0;
+    }
+
+    .deco.circle1 {
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      background: var(--forest-green);
+      top: 60%;
+      right: -60px;
+    }
+
+    .deco.circle2 {
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      background: var(--accent-orange);
+      bottom: 15%;
+      left: -40px;
+    }
+
+    @media (max-width: 480px) {
+      .content { padding: 32px 24px 20px; }
+      .menu-header h1 { font-size: 1.9rem; }
+      .drinks-row { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="stand">
+
+  <!-- Декор -->
+  <div class="deco circle1"></div>
+  <div class="deco circle2"></div>
+
+  <!-- Верхняя лента -->
+  <div class="top-ribbon">
+    <span>МЕНЮ ДНЯ</span>
+  </div>
+
+  <!-- Контент -->
+  <div class="content">
+
+    <!-- Заголовок -->
+    <div class="menu-header">
+      <span class="label">Кафе «Белый Гриб»</span>
+      <h1>Меню дня</h1>
+      <p class="date">Обновляется ежедневно</p>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Изображение штендера сторона Б -->
+    <div class="hero-image">
+      <img
+        src="https://res.cloudinary.com/dnickckih/image/upload/v1779201996/Gemini_Generated_Image_fk1kypfk1kypfk1k_d4hx74.png"
+        alt="Штендер кафе Белый Гриб — сторона Б"
+        loading="lazy"
+      />
+    </div>
+
+    <!-- Супы -->
+    <div class="menu-section">
+      <h2><span class="emoji">&#127858;</span> Супы</h2>
+      <div class="menu-item">
+        <div>
+          <span class="name">Крем-суп из белых грибов</span>
+          <span class="desc">с трюфельным маслом и гренками</span>
+        </div>
+        <span class="dots"></span>
+        <span class="price">420 &#8381;</span>
+      </div>
+      <div class="menu-item">
+        <div>
+          <span class="name">Борщ по-домашнему</span>
+          <span class="desc">со сметаной и пампушками</span>
+        </div>
+        <span class="dots"></span>
+        <span class="price">350 &#8381;</span>
+      </div>
+    </div>
+
+    <!-- Горячее -->
+    <div class="menu-section">
+      <h2><span class="emoji">&#127869;</span> Горячее</h2>
+      <div class="menu-item">
+        <div>
+          <span class="name">Жульен с лисичками</span>
+          <span class="desc">в сливочном соусе, запечённый с сыром</span>
+        </div>
+        <span class="dots"></span>
+        <span class="price">520 &#8381;</span>
+      </div>
+      <div class="menu-item">
+        <div>
+          <span class="name">Ризотто с белыми грибами</span>
+          <span class="desc">арборио, пармезан, тимьян</span>
+        </div>
+        <span class="dots"></span>
+        <span class="price">580 &#8381;</span>
+      </div>
+      <div class="menu-item">
+        <div>
+          <span class="name">Стейк из сёмги</span>
+          <span class="desc">с грибным рагу и спаржей</span>
+        </div>
+        <span class="dots"></span>
+        <span class="price">690 &#8381;</span>
+      </div>
+    </div>
+
+    <!-- Десерты -->
+    <div class="menu-section">
+      <h2><span class="emoji">&#127856;</span> Десерты</h2>
+      <div class="menu-item">
+        <div>
+          <span class="name">Медовик лесной</span>
+          <span class="desc">с ягодами и кремом из маскарпоне</span>
+        </div>
+        <span class="dots"></span>
+        <span class="price">320 &#8381;</span>
+      </div>
+      <div class="menu-item">
+        <div>
+          <span class="name">Чизкейк «Белый гриб»</span>
+          <span class="desc">авторский рецепт с карамелью</span>
+        </div>
+        <span class="dots"></span>
+        <span class="price">360 &#8381;</span>
+      </div>
+    </div>
+
+    <!-- Спец-предложение -->
+    <div class="special-offer">
+      <span class="badge">Хит сезона</span>
+      <h3>Бизнес-ланч «Лесной»</h3>
+      <p>Суп + горячее + напиток на выбор</p>
+      <div class="special-price">450 &#8381;</div>
+    </div>
+
+    <!-- Напитки -->
+    <div class="drinks-row">
+      <div class="drink-card">
+        <span class="emoji">&#9749;</span>
+        <span class="name">Капучино</span>
+        <span class="price">220 &#8381;</span>
+      </div>
+      <div class="drink-card">
+        <span class="emoji">&#127861;</span>
+        <span class="name">Чай лесной</span>
+        <span class="price">180 &#8381;</span>
+      </div>
+      <div class="drink-card">
+        <span class="emoji">&#127863;</span>
+        <span class="name">Морс ягодный</span>
+        <span class="price">160 &#8381;</span>
+      </div>
+    </div>
+
+    <!-- Нижняя инфо -->
+    <div class="bottom-info">
+      <div class="wifi">&#128246; Wi-Fi: BelyGrib_Free</div>
+      <p class="social">
+        Мы в соцсетях: <a href="#">@belygrib</a>
+      </p>
+    </div>
+
+  </div>
+
+  <!-- Нижняя полоса -->
+  <div class="bottom-bar">
+    <span>&#127812; ПЕРЕВЕРНИТЕ ШТЕНДЕР &#8594; СТОРОНА А &#127812;</span>
+  </div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Белый Гриб — Кафе | Сторона А</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Raleway:wght@300;400;500;600;700&family=Caveat:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --cream: #FFF8F0;
+      --warm-brown: #5C3D2E;
+      --accent-orange: #E8822A;
+      --accent-gold: #D4A843;
+      --forest-green: #3A6B35;
+      --light-green: #7FB069;
+      --soft-beige: #F5E6D3;
+      --dark-text: #2C1810;
+      --muted: #8B7355;
+    }
+
+    html {
+      font-size: 16px;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Raleway', sans-serif;
+      background: var(--cream);
+      color: var(--dark-text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      overflow-x: hidden;
+    }
+
+    /* ─── штендер-рамка ─── */
+    .stand {
+      width: 100%;
+      max-width: 520px;
+      min-height: 100vh;
+      background: linear-gradient(175deg, #fffdf9 0%, var(--cream) 40%, var(--soft-beige) 100%);
+      position: relative;
+      padding: 0;
+      overflow: hidden;
+    }
+
+    .stand::before {
+      content: '';
+      position: absolute;
+      inset: 12px;
+      border: 2px solid var(--accent-gold);
+      border-radius: 18px;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    /* ─── декоративная полоска сверху ─── */
+    .top-ribbon {
+      background: linear-gradient(135deg, var(--forest-green), var(--light-green));
+      padding: 14px 0;
+      text-align: center;
+      position: relative;
+      z-index: 3;
+    }
+
+    .top-ribbon span {
+      font-family: 'Caveat', cursive;
+      color: #fff;
+      font-size: 1.05rem;
+      letter-spacing: 2px;
+      font-weight: 600;
+    }
+
+    /* ─── главный контент ─── */
+    .content {
+      padding: 48px 36px 32px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ─── лого-область ─── */
+    .logo-area {
+      text-align: center;
+      margin-bottom: 36px;
+    }
+
+    .mushroom-icon {
+      width: 72px;
+      height: 72px;
+      margin: 0 auto 18px;
+      background: var(--forest-green);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 6px 20px rgba(58, 107, 53, 0.25);
+    }
+
+    .mushroom-icon svg {
+      width: 38px;
+      height: 38px;
+      fill: #fff;
+    }
+
+    .cafe-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.8rem;
+      font-weight: 900;
+      color: var(--warm-brown);
+      line-height: 1.1;
+      margin-bottom: 6px;
+    }
+
+    .cafe-subtitle {
+      font-family: 'Caveat', cursive;
+      font-size: 1.35rem;
+      color: var(--accent-orange);
+      font-weight: 600;
+      letter-spacing: 1px;
+    }
+
+    /* ─── разделитель ─── */
+    .divider {
+      width: 60px;
+      height: 3px;
+      background: linear-gradient(to right, var(--accent-gold), var(--accent-orange));
+      margin: 28px auto;
+      border-radius: 3px;
+    }
+
+    /* ─── изображение ─── */
+    .hero-image {
+      width: calc(100% + 24px);
+      margin: 0 -12px 32px;
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 8px 32px rgba(44, 24, 16, 0.12);
+      position: relative;
+    }
+
+    .hero-image img {
+      width: 100%;
+      height: 280px;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.6s ease;
+    }
+
+    .hero-image::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 60px;
+      background: linear-gradient(transparent, rgba(255, 248, 240, 0.8));
+    }
+
+    /* ─── приветственный блок ─── */
+    .welcome {
+      text-align: center;
+      margin-bottom: 36px;
+    }
+
+    .welcome h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--warm-brown);
+      margin-bottom: 12px;
+    }
+
+    .welcome p {
+      font-size: 0.95rem;
+      line-height: 1.7;
+      color: var(--muted);
+      max-width: 380px;
+      margin: 0 auto;
+    }
+
+    /* ─── карточки-фишки ─── */
+    .features {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 36px;
+    }
+
+    .feature-card {
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(212, 168, 67, 0.2);
+      border-radius: 14px;
+      padding: 22px 16px;
+      text-align: center;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 24px rgba(44, 24, 16, 0.08);
+    }
+
+    .feature-card .icon {
+      font-size: 1.8rem;
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    .feature-card h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--warm-brown);
+      margin-bottom: 4px;
+    }
+
+    .feature-card p {
+      font-size: 0.78rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    /* ─── акцентная полоса ─── */
+    .cta-banner {
+      background: linear-gradient(135deg, var(--accent-orange), #D4763A);
+      border-radius: 14px;
+      padding: 26px 24px;
+      text-align: center;
+      color: #fff;
+      margin-bottom: 32px;
+      box-shadow: 0 6px 24px rgba(232, 130, 42, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-banner::before {
+      content: '';
+      position: absolute;
+      top: -30px;
+      right: -30px;
+      width: 100px;
+      height: 100px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+    }
+
+    .cta-banner h3 {
+      font-family: 'Caveat', cursive;
+      font-size: 1.6rem;
+      margin-bottom: 6px;
+      position: relative;
+    }
+
+    .cta-banner p {
+      font-size: 0.9rem;
+      opacity: 0.9;
+      line-height: 1.5;
+      position: relative;
+    }
+
+    /* ─── время работы ─── */
+    .hours {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .hours h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.15rem;
+      color: var(--warm-brown);
+      margin-bottom: 14px;
+    }
+
+    .hours-grid {
+      display: inline-grid;
+      grid-template-columns: auto auto;
+      gap: 6px 20px;
+      text-align: left;
+    }
+
+    .hours-grid .day {
+      font-weight: 600;
+      font-size: 0.88rem;
+      color: var(--dark-text);
+    }
+
+    .hours-grid .time {
+      font-size: 0.88rem;
+      color: var(--muted);
+    }
+
+    /* ─── контакты ─── */
+    .contacts {
+      text-align: center;
+      padding: 24px 0 8px;
+      border-top: 1px solid rgba(212, 168, 67, 0.25);
+    }
+
+    .contacts p {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-bottom: 6px;
+      line-height: 1.6;
+    }
+
+    .contacts .phone {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--forest-green);
+      letter-spacing: 1px;
+    }
+
+    .contacts .address {
+      font-size: 0.82rem;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    /* ─── нижняя плашка ─── */
+    .bottom-bar {
+      background: var(--warm-brown);
+      padding: 16px 0;
+      text-align: center;
+      margin-top: auto;
+    }
+
+    .bottom-bar span {
+      font-family: 'Caveat', cursive;
+      color: var(--accent-gold);
+      font-size: 0.95rem;
+      letter-spacing: 2px;
+    }
+
+    /* ─── декоративные элементы ─── */
+    .deco-leaf {
+      position: absolute;
+      opacity: 0.06;
+      z-index: 0;
+    }
+
+    .deco-leaf.top-right {
+      top: 80px;
+      right: -10px;
+      width: 140px;
+      transform: rotate(15deg);
+    }
+
+    .deco-leaf.bottom-left {
+      bottom: 120px;
+      left: -20px;
+      width: 120px;
+      transform: rotate(-25deg);
+    }
+
+    /* ─── адаптив ─── */
+    @media (max-width: 480px) {
+      .content { padding: 36px 24px 24px; }
+      .cafe-name { font-size: 2.2rem; }
+      .features { gap: 10px; }
+      .feature-card { padding: 16px 12px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="stand">
+
+  <!-- Декоративные листочки -->
+  <svg class="deco-leaf top-right" viewBox="0 0 120 150" fill="currentColor" color="#3A6B35">
+    <path d="M60 0C60 0 120 60 120 100C120 130 95 150 60 150C25 150 0 130 0 100C0 60 60 0 60 0Z"/>
+    <line x1="60" y1="20" x2="60" y2="140" stroke="#3A6B35" stroke-width="2" fill="none" opacity="0.3"/>
+  </svg>
+  <svg class="deco-leaf bottom-left" viewBox="0 0 120 150" fill="currentColor" color="#3A6B35">
+    <path d="M60 0C60 0 120 60 120 100C120 130 95 150 60 150C25 150 0 130 0 100C0 60 60 0 60 0Z"/>
+  </svg>
+
+  <!-- Верхняя лента -->
+  <div class="top-ribbon">
+    <span>ДОБРО ПОЖАЛОВАТЬ</span>
+  </div>
+
+  <!-- Контент -->
+  <div class="content">
+
+    <!-- Лого -->
+    <div class="logo-area">
+      <div class="mushroom-icon">
+        <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="32" cy="28" rx="26" ry="18" fill="#fff"/>
+          <rect x="26" y="28" width="12" height="22" rx="4" fill="#fff" opacity="0.85"/>
+          <ellipse cx="32" cy="50" rx="14" ry="4" fill="#fff" opacity="0.3"/>
+          <circle cx="22" cy="22" r="3" fill="#3A6B35" opacity="0.3"/>
+          <circle cx="38" cy="18" r="2.5" fill="#3A6B35" opacity="0.25"/>
+          <circle cx="30" cy="14" r="2" fill="#3A6B35" opacity="0.2"/>
+        </svg>
+      </div>
+      <h1 class="cafe-name">Белый Гриб</h1>
+      <p class="cafe-subtitle">уютное лесное кафе</p>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Изображение штендера сторона А -->
+    <div class="hero-image">
+      <img
+        src="https://res.cloudinary.com/dnickckih/image/upload/v1779201995/Gemini_Generated_Image_qwe4t9qwe4t9qwe4_xd8wrn.png"
+        alt="Штендер кафе Белый Гриб — сторона А"
+        loading="lazy"
+      />
+    </div>
+
+    <!-- Приветствие -->
+    <div class="welcome">
+      <h2>Вкус леса в каждом блюде</h2>
+      <p>
+        Мы готовим из свежих сезонных продуктов с&nbsp;любовью к&nbsp;природе.
+        Грибные супы, ароматная выпечка и&nbsp;уютная атмосфера ждут вас каждый день.
+      </p>
+    </div>
+
+    <!-- Карточки -->
+    <div class="features">
+      <div class="feature-card">
+        <span class="icon">&#127812;</span>
+        <h3>Свежие грибы</h3>
+        <p>Собираем лучшие лесные грибы каждый сезон</p>
+      </div>
+      <div class="feature-card">
+        <span class="icon">&#9749;</span>
+        <h3>Авторский кофе</h3>
+        <p>Латте с&nbsp;белым грибом и&nbsp;трюфелем</p>
+      </div>
+      <div class="feature-card">
+        <span class="icon">&#127858;</span>
+        <h3>Домашняя выпечка</h3>
+        <p>Пироги с&nbsp;грибами и&nbsp;ягодами из&nbsp;печи</p>
+      </div>
+      <div class="feature-card">
+        <span class="icon">&#127807;</span>
+        <h3>Эко-продукты</h3>
+        <p>Фермерские продукты без химии</p>
+      </div>
+    </div>
+
+    <!-- Акцентный баннер -->
+    <div class="cta-banner">
+      <h3>Загляните на обед!</h3>
+      <p>Бизнес-ланч каждый будний день с 12:00 до 15:00 — от 450 &#8381;</p>
+    </div>
+
+    <!-- Часы работы -->
+    <div class="hours">
+      <h3>Часы работы</h3>
+      <div class="hours-grid">
+        <span class="day">Пн — Пт</span>
+        <span class="time">08:00 — 22:00</span>
+        <span class="day">Сб — Вс</span>
+        <span class="time">09:00 — 23:00</span>
+      </div>
+    </div>
+
+    <!-- Контакты -->
+    <div class="contacts">
+      <p class="phone">+7 (495) 123-45-67</p>
+      <p class="address">ул. Лесная, д. 12 &middot; Москва</p>
+    </div>
+
+  </div>
+
+  <!-- Нижняя полоса -->
+  <div class="bottom-bar">
+    <span>&#127812; БЕЛЫЙ ГРИБ &#127812;</span>
+  </div>
+
+</div>
+
+</body>
+</html>
