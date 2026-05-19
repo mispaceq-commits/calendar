@@ -9,7 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Caveat:wght@600;700&family=Raleway:wght@300;500;600&display=swap" rel="stylesheet" />
   <style>
     @page {
-      size: A4 portrait;
+      size: 600mm 1000mm;
       margin: 0;
     }
 
@@ -22,62 +22,81 @@
     html, body {
       width: 100%;
       height: 100%;
-      overflow: hidden;
+      background: #1a1a1a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       -webkit-print-color-adjust: exact;
       print-color-adjust: exact;
     }
 
-    body {
-      font-family: 'Raleway', sans-serif;
-      color: #fff;
-    }
-
-    .page {
-      width: 100vw;
-      height: 100vh;
+    /* ─── штендер-доска ─── */
+    .shtender {
+      width: 600px;
+      height: 1000px;
       position: relative;
       overflow: hidden;
+      border-radius: 12px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
     }
 
-    /* ─── фоновое фото на всю страницу ─── */
-    .bg-photo {
+    @media (max-width: 640px) {
+      .shtender {
+        width: 100vw;
+        height: calc(100vw * 1.6667);
+        border-radius: 0;
+      }
+    }
+
+    @media print {
+      html, body { background: #fff; }
+      .shtender {
+        width: 600mm;
+        height: 1000mm;
+        border-radius: 0;
+        box-shadow: none;
+      }
+    }
+
+    /* ─── фон ─── */
+    .bg {
       position: absolute;
       inset: 0;
       z-index: 0;
     }
 
-    .bg-photo img {
+    .bg img {
       width: 100%;
       height: 100%;
       object-fit: cover;
       display: block;
     }
 
-    /* ─── затемняющий оверлей ─── */
+    /* ─── оверлей ─── */
     .overlay {
       position: absolute;
       inset: 0;
       z-index: 1;
       background:
         linear-gradient(180deg,
-          rgba(0, 0, 0, 0.35) 0%,
-          rgba(0, 0, 0, 0.10) 35%,
-          rgba(0, 0, 0, 0.10) 55%,
-          rgba(0, 0, 0, 0.55) 100%
+          rgba(0,0,0,0.40) 0%,
+          rgba(0,0,0,0.08) 30%,
+          rgba(0,0,0,0.08) 55%,
+          rgba(0,0,0,0.55) 100%
         );
     }
 
-    /* ─── золотая рамка ─── */
+    /* ─── рамка ─── */
     .frame {
       position: absolute;
-      inset: 24px;
-      border: 2px solid rgba(212, 168, 67, 0.6);
-      border-radius: 6px;
+      inset: 20px;
+      border: 2px solid rgba(212,168,67,0.55);
+      border-radius: 8px;
       z-index: 2;
       pointer-events: none;
     }
 
-    /* ─── контент поверх фото ─── */
+    /* ─── контент ─── */
     .content {
       position: absolute;
       inset: 0;
@@ -85,7 +104,9 @@
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      padding: 56px 48px;
+      padding: 48px 40px;
+      color: #fff;
+      font-family: 'Raleway', sans-serif;
     }
 
     /* ─── верх ─── */
@@ -93,13 +114,12 @@
       text-align: center;
     }
 
-    .tagline {
+    .top .tag {
       font-family: 'Caveat', cursive;
-      font-size: 1.3rem;
-      color: rgba(255, 255, 255, 0.85);
-      letter-spacing: 3px;
+      font-size: 1.2rem;
+      letter-spacing: 4px;
       text-transform: uppercase;
-      margin-bottom: 8px;
+      opacity: 0.85;
     }
 
     /* ─── центр ─── */
@@ -112,111 +132,76 @@
       justify-content: center;
     }
 
-    .logo-icon {
-      width: 80px;
-      height: 80px;
-      margin-bottom: 24px;
-      opacity: 0.95;
+    .logo {
+      width: 90px;
+      height: 90px;
+      margin-bottom: 28px;
     }
 
-    .cafe-name {
+    h1 {
       font-family: 'Playfair Display', serif;
-      font-size: 4.5rem;
+      font-size: 4rem;
       font-weight: 900;
-      line-height: 1;
-      letter-spacing: 3px;
-      text-shadow: 0 4px 30px rgba(0, 0, 0, 0.4);
-      margin-bottom: 12px;
+      line-height: 1.05;
+      letter-spacing: 2px;
+      text-shadow: 0 4px 24px rgba(0,0,0,0.4);
+      margin-bottom: 14px;
     }
 
-    .subtitle {
+    .sub {
       font-family: 'Caveat', cursive;
-      font-size: 1.6rem;
+      font-size: 1.5rem;
       color: #D4A843;
       font-weight: 600;
       letter-spacing: 2px;
     }
 
-    .gold-line {
-      width: 80px;
+    .line {
+      width: 70px;
       height: 2px;
       background: #D4A843;
-      margin: 28px auto 0;
+      margin: 32px auto 0;
     }
 
     /* ─── низ ─── */
-    .bottom {
+    .bot {
       display: flex;
       justify-content: space-between;
       align-items: flex-end;
-    }
-
-    .hours {
       font-size: 0.85rem;
       font-weight: 500;
       line-height: 1.8;
-      letter-spacing: 0.5px;
       text-shadow: 0 2px 8px rgba(0,0,0,0.5);
     }
 
-    .hours span {
-      display: block;
-    }
-
-    .contact {
-      text-align: right;
-      font-size: 0.85rem;
-      font-weight: 500;
-      line-height: 1.8;
-      letter-spacing: 0.5px;
-      text-shadow: 0 2px 8px rgba(0,0,0,0.5);
-    }
-
-    .contact .phone {
+    .bot .phone {
       font-family: 'Playfair Display', serif;
-      font-size: 1.15rem;
+      font-size: 1.1rem;
       font-weight: 700;
       color: #D4A843;
     }
 
-    /* ─── печать ─── */
-    @media print {
-      .page {
-        width: 210mm;
-        height: 297mm;
-      }
+    .bot .right {
+      text-align: right;
     }
   </style>
 </head>
 <body>
 
-<div class="page">
-
-  <!-- Фоновое фото -->
-  <div class="bg-photo">
-    <img
-      src="https://res.cloudinary.com/dnickckih/image/upload/v1779201995/Gemini_Generated_Image_qwe4t9qwe4t9qwe4_xd8wrn.png"
-      alt="Штендер кафе Белый Гриб — сторона А"
-    />
+<div class="shtender">
+  <div class="bg">
+    <img src="https://res.cloudinary.com/dnickckih/image/upload/v1779201995/Gemini_Generated_Image_qwe4t9qwe4t9qwe4_xd8wrn.png" alt="Сторона А" />
   </div>
-
-  <!-- Оверлей -->
   <div class="overlay"></div>
-
-  <!-- Золотая рамка -->
   <div class="frame"></div>
 
-  <!-- Контент -->
   <div class="content">
-
-    <!-- Верх -->
     <div class="top">
-      <p class="tagline">Добро пожаловать</p>
+      <p class="tag">Добро пожаловать</p>
     </div>
 
-    <!-- Центр -->
     <div class="center">
-      <svg class="logo-icon" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+      <svg class="logo" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
         <ellipse cx="40" cy="32" rx="30" ry="20" fill="rgba(255,255,255,0.9)"/>
         <rect x="33" y="32" width="14" height="26" rx="5" fill="rgba(255,255,255,0.75)"/>
         <ellipse cx="40" cy="58" rx="16" ry="4" fill="rgba(255,255,255,0.2)"/>
@@ -224,25 +209,22 @@
         <circle cx="46" cy="22" r="3" fill="#D4A843" opacity="0.35"/>
         <circle cx="36" cy="18" r="2.5" fill="#D4A843" opacity="0.3"/>
       </svg>
-      <h1 class="cafe-name">Белый Гриб</h1>
-      <p class="subtitle">уютное лесное кафе</p>
-      <div class="gold-line"></div>
+      <h1>Белый<br>Гриб</h1>
+      <p class="sub">уютное лесное кафе</p>
+      <div class="line"></div>
     </div>
 
-    <!-- Низ -->
-    <div class="bottom">
-      <div class="hours">
-        <span>Пн — Пт: 08:00 — 22:00</span>
+    <div class="bot">
+      <div>
+        <span>Пн — Пт: 08:00 — 22:00</span><br>
         <span>Сб — Вс: 09:00 — 23:00</span>
       </div>
-      <div class="contact">
-        <span class="phone">+7 (495) 123-45-67</span>
+      <div class="right">
+        <span class="phone">+7 (495) 123-45-67</span><br>
         <span>ул. Лесная, д. 12 · Москва</span>
       </div>
     </div>
-
   </div>
-
 </div>
 
 </body>

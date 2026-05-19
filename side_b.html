@@ -9,7 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Caveat:wght@600;700&family=Raleway:wght@300;500;600&display=swap" rel="stylesheet" />
   <style>
     @page {
-      size: A4 portrait;
+      size: 600mm 1000mm;
       margin: 0;
     }
 
@@ -22,31 +22,50 @@
     html, body {
       width: 100%;
       height: 100%;
-      overflow: hidden;
+      background: #1a1a1a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       -webkit-print-color-adjust: exact;
       print-color-adjust: exact;
     }
 
-    body {
-      font-family: 'Raleway', sans-serif;
-      color: #fff;
-    }
-
-    .page {
-      width: 100vw;
-      height: 100vh;
+    /* ─── штендер ─── */
+    .shtender {
+      width: 600px;
+      height: 1000px;
       position: relative;
       overflow: hidden;
+      border-radius: 12px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
     }
 
-    /* ─── фоновое фото ─── */
-    .bg-photo {
+    @media (max-width: 640px) {
+      .shtender {
+        width: 100vw;
+        height: calc(100vw * 1.6667);
+        border-radius: 0;
+      }
+    }
+
+    @media print {
+      html, body { background: #fff; }
+      .shtender {
+        width: 600mm;
+        height: 1000mm;
+        border-radius: 0;
+        box-shadow: none;
+      }
+    }
+
+    /* ─── фон ─── */
+    .bg {
       position: absolute;
       inset: 0;
       z-index: 0;
     }
 
-    .bg-photo img {
+    .bg img {
       width: 100%;
       height: 100%;
       object-fit: cover;
@@ -60,19 +79,19 @@
       z-index: 1;
       background:
         linear-gradient(180deg,
-          rgba(0, 0, 0, 0.40) 0%,
-          rgba(0, 0, 0, 0.15) 30%,
-          rgba(0, 0, 0, 0.15) 50%,
-          rgba(0, 0, 0, 0.60) 100%
+          rgba(0,0,0,0.42) 0%,
+          rgba(0,0,0,0.12) 25%,
+          rgba(0,0,0,0.12) 45%,
+          rgba(0,0,0,0.58) 100%
         );
     }
 
-    /* ─── золотая рамка ─── */
+    /* ─── рамка ─── */
     .frame {
       position: absolute;
-      inset: 24px;
-      border: 2px solid rgba(212, 168, 67, 0.6);
-      border-radius: 6px;
+      inset: 20px;
+      border: 2px solid rgba(212,168,67,0.55);
+      border-radius: 8px;
       z-index: 2;
       pointer-events: none;
     }
@@ -85,7 +104,9 @@
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      padding: 56px 48px;
+      padding: 48px 44px;
+      color: #fff;
+      font-family: 'Raleway', sans-serif;
     }
 
     /* ─── верх ─── */
@@ -95,27 +116,27 @@
 
     .top .label {
       font-family: 'Caveat', cursive;
-      font-size: 1.15rem;
-      color: rgba(255, 255, 255, 0.8);
+      font-size: 1.1rem;
       letter-spacing: 3px;
       text-transform: uppercase;
+      opacity: 0.8;
       display: block;
       margin-bottom: 6px;
     }
 
     .top h1 {
       font-family: 'Playfair Display', serif;
-      font-size: 3rem;
+      font-size: 2.8rem;
       font-weight: 900;
       letter-spacing: 2px;
-      text-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+      text-shadow: 0 4px 20px rgba(0,0,0,0.4);
     }
 
-    .gold-line {
+    .line {
       width: 60px;
       height: 2px;
       background: #D4A843;
-      margin: 20px auto 0;
+      margin: 18px auto 0;
     }
 
     /* ─── меню ─── */
@@ -124,216 +145,188 @@
       display: flex;
       flex-direction: column;
       justify-content: center;
-      max-width: 400px;
+      max-width: 420px;
       margin: 0 auto;
       width: 100%;
     }
 
-    .menu-section {
-      margin-bottom: 28px;
+    .section {
+      margin-bottom: 24px;
     }
 
-    .menu-section:last-child {
+    .section:last-of-type {
       margin-bottom: 0;
     }
 
-    .menu-section h2 {
+    .section h2 {
       font-family: 'Caveat', cursive;
-      font-size: 1.4rem;
+      font-size: 1.35rem;
       font-weight: 700;
       color: #D4A843;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
       letter-spacing: 1px;
     }
 
-    .menu-item {
+    .item {
       display: flex;
       justify-content: space-between;
       align-items: baseline;
-      padding: 6px 0;
+      padding: 5px 0;
     }
 
-    .menu-item .name {
-      font-size: 0.92rem;
+    .item .name {
+      font-size: 0.9rem;
       font-weight: 500;
-      letter-spacing: 0.3px;
       text-shadow: 0 1px 6px rgba(0,0,0,0.5);
     }
 
-    .menu-item .dots {
+    .item .dots {
       flex: 1;
-      border-bottom: 1px dotted rgba(212, 168, 67, 0.4);
+      border-bottom: 1px dotted rgba(212,168,67,0.35);
       margin: 0 10px;
-      min-width: 16px;
+      min-width: 14px;
       align-self: end;
       margin-bottom: 4px;
     }
 
-    .menu-item .price {
+    .item .price {
       font-family: 'Playfair Display', serif;
       font-weight: 700;
-      font-size: 0.95rem;
+      font-size: 0.92rem;
       color: #D4A843;
       white-space: nowrap;
       text-shadow: 0 1px 6px rgba(0,0,0,0.5);
     }
 
-    /* ─── спецпредложение ─── */
+    /* ─── спец ─── */
     .special {
       text-align: center;
-      background: rgba(212, 168, 67, 0.15);
+      background: rgba(212,168,67,0.12);
       backdrop-filter: blur(8px);
-      border: 1px solid rgba(212, 168, 67, 0.4);
+      border: 1px solid rgba(212,168,67,0.35);
       border-radius: 10px;
-      padding: 20px 24px;
-      margin-top: 20px;
+      padding: 18px 20px;
+      margin-top: 18px;
     }
 
     .special h3 {
       font-family: 'Caveat', cursive;
-      font-size: 1.3rem;
+      font-size: 1.25rem;
       color: #D4A843;
       margin-bottom: 4px;
     }
 
     .special p {
-      font-size: 0.82rem;
+      font-size: 0.8rem;
       opacity: 0.85;
       margin-bottom: 6px;
     }
 
-    .special .price-big {
+    .special .big {
       font-family: 'Playfair Display', serif;
-      font-size: 2rem;
+      font-size: 1.8rem;
       font-weight: 900;
       color: #D4A843;
-      text-shadow: 0 2px 12px rgba(0,0,0,0.3);
+      text-shadow: 0 2px 10px rgba(0,0,0,0.3);
     }
 
     /* ─── низ ─── */
-    .bottom {
+    .bot {
       text-align: center;
-    }
-
-    .bottom .wifi {
       font-size: 0.82rem;
       font-weight: 500;
-      letter-spacing: 1px;
-      opacity: 0.8;
-      margin-bottom: 6px;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.5);
     }
 
-    .bottom .social {
+    .bot .wifi {
+      opacity: 0.8;
+      margin-bottom: 4px;
+    }
+
+    .bot .social {
       font-family: 'Caveat', cursive;
-      font-size: 1.1rem;
+      font-size: 1.05rem;
       color: #D4A843;
       letter-spacing: 1px;
-    }
-
-    /* ─── печать ─── */
-    @media print {
-      .page {
-        width: 210mm;
-        height: 297mm;
-      }
     }
   </style>
 </head>
 <body>
 
-<div class="page">
-
-  <!-- Фото -->
-  <div class="bg-photo">
-    <img
-      src="https://res.cloudinary.com/dnickckih/image/upload/v1779201996/Gemini_Generated_Image_fk1kypfk1kypfk1k_d4hx74.png"
-      alt="Штендер кафе Белый Гриб — сторона Б"
-    />
+<div class="shtender">
+  <div class="bg">
+    <img src="https://res.cloudinary.com/dnickckih/image/upload/v1779201996/Gemini_Generated_Image_fk1kypfk1kypfk1k_d4hx74.png" alt="Сторона Б" />
   </div>
-
-  <!-- Оверлей -->
   <div class="overlay"></div>
-
-  <!-- Рамка -->
   <div class="frame"></div>
 
-  <!-- Контент -->
   <div class="content">
-
-    <!-- Верх -->
     <div class="top">
       <span class="label">Кафе «Белый Гриб»</span>
       <h1>Меню дня</h1>
-      <div class="gold-line"></div>
+      <div class="line"></div>
     </div>
 
-    <!-- Меню -->
     <div class="menu">
-
-      <div class="menu-section">
+      <div class="section">
         <h2>Супы</h2>
-        <div class="menu-item">
+        <div class="item">
           <span class="name">Крем-суп из белых грибов</span>
           <span class="dots"></span>
           <span class="price">420 &#8381;</span>
         </div>
-        <div class="menu-item">
+        <div class="item">
           <span class="name">Борщ по-домашнему</span>
           <span class="dots"></span>
           <span class="price">350 &#8381;</span>
         </div>
       </div>
 
-      <div class="menu-section">
+      <div class="section">
         <h2>Горячее</h2>
-        <div class="menu-item">
+        <div class="item">
           <span class="name">Жульен с лисичками</span>
           <span class="dots"></span>
           <span class="price">520 &#8381;</span>
         </div>
-        <div class="menu-item">
+        <div class="item">
           <span class="name">Ризотто с белыми грибами</span>
           <span class="dots"></span>
           <span class="price">580 &#8381;</span>
         </div>
-        <div class="menu-item">
+        <div class="item">
           <span class="name">Стейк из сёмги</span>
           <span class="dots"></span>
           <span class="price">690 &#8381;</span>
         </div>
       </div>
 
-      <div class="menu-section">
+      <div class="section">
         <h2>Десерты</h2>
-        <div class="menu-item">
+        <div class="item">
           <span class="name">Медовик лесной</span>
           <span class="dots"></span>
           <span class="price">320 &#8381;</span>
         </div>
-        <div class="menu-item">
+        <div class="item">
           <span class="name">Чизкейк «Белый гриб»</span>
           <span class="dots"></span>
           <span class="price">360 &#8381;</span>
         </div>
       </div>
 
-      <!-- Спецпредложение -->
       <div class="special">
         <h3>Бизнес-ланч «Лесной»</h3>
         <p>Суп + горячее + напиток</p>
-        <div class="price-big">450 &#8381;</div>
+        <div class="big">450 &#8381;</div>
       </div>
-
     </div>
 
-    <!-- Низ -->
-    <div class="bottom">
+    <div class="bot">
       <p class="wifi">Wi-Fi: BelyGrib_Free</p>
       <p class="social">@belygrib</p>
     </div>
-
   </div>
-
 </div>
 
 </body>
