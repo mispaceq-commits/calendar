@@ -1473,14 +1473,16 @@
           })
           .join("");
 
-        // "You are here" pin on Floor 1 (Reception)
+        // "You are here" pin on Floor 1 (Reception) — placed in the
+        // top-right corner of the room so it does not overlap the label.
         const youAreHere =
           id === 1
             ? `
               <g>
-                <circle class="you-are-here-ring" cx="95" cy="105" r="10" />
-                <circle class="you-are-here" cx="95" cy="105" r="6" />
-                <text x="95" y="138" text-anchor="middle" font-family="Space Grotesk" font-size="9" font-weight="700" fill="#ff5b3a" letter-spacing="0.2em">YOU ARE HERE</text>
+                <circle class="you-are-here-ring" cx="132" cy="82" r="10" />
+                <circle class="you-are-here" cx="132" cy="82" r="5" />
+                <text x="132" y="50" text-anchor="middle" font-family="Space Grotesk" font-size="9" font-weight="700" fill="#ff5b3a" letter-spacing="0.2em">YOU ARE HERE</text>
+                <path d="M132 56 L132 72" stroke="#ff5b3a" stroke-width="1.5" stroke-dasharray="2 2"/>
               </g>`
             : "";
 
