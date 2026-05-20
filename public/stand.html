@@ -3,10 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Aurora Medical Center — Doctors on Duty</title>
+    <title>Doctor Schedule — Aurora Medical Center</title>
     <meta
       name="description"
-      content="Daily doctor schedule and room navigation for Aurora Medical Center."
+      content="Weekly schedule of attending doctors. Name, title, hours, and room."
     />
     <link
       rel="preconnect"
@@ -19,24 +19,17 @@
     />
     <style>
       :root {
-        --ink: #0b1f2a;
+        --ink: #102531;
         --ink-2: #2a3a44;
-        --ink-3: #5b6b75;
-        --bg: #f5f1e8;
+        --ink-3: #6b7a83;
+        --bg: #f3eee2;
         --paper: #ffffff;
         --teal: #0e7c7b;
-        --teal-2: #0f9a99;
-        --mint: #cfece3;
         --coral: #ff5b3a;
         --amber: #f6b745;
-        --rose: #f0e3df;
-        --line: #0b1f2a;
-        --floor-1: #0e7c7b;
-        --floor-2: #c8553d;
-        --floor-3: #5b5fb2;
-        --shadow: 0 6px 0 -1px rgba(11, 31, 42, 0.85),
-          0 12px 24px -10px rgba(11, 31, 42, 0.25);
-        --radius: 18px;
+        --indigo: #5b5fb2;
+        --line: rgba(16, 37, 49, 0.12);
+        --radius: 14px;
       }
 
       * {
@@ -51,7 +44,6 @@
         color: var(--ink);
         font-family: "Space Grotesk", system-ui, -apple-system, "Segoe UI",
           sans-serif;
-        font-feature-settings: "ss01", "ss02";
         -webkit-font-smoothing: antialiased;
         text-rendering: optimizeLegibility;
       }
@@ -60,298 +52,96 @@
         font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
       }
 
-      /* ────────── BACKDROP ARTWORK ────────── */
-      .backdrop {
-        position: fixed;
-        inset: 0;
-        z-index: 0;
-        pointer-events: none;
-        overflow: hidden;
-      }
-      .backdrop svg {
-        position: absolute;
-        width: 64vmin;
-        height: 64vmin;
-        opacity: 0.5;
-      }
-      .blob-a {
-        top: -16vmin;
-        right: -10vmin;
-        transform: rotate(8deg);
-      }
-      .blob-b {
-        bottom: -20vmin;
-        left: -16vmin;
-        transform: rotate(-12deg);
-      }
-
-      /* ────────── STAND FRAME ────────── */
+      /* ───── PAGE FRAME ───── */
       .stand {
-        position: relative;
-        z-index: 1;
-        max-width: 1480px;
+        max-width: 1280px;
         margin: 0 auto;
-        padding: 28px 28px 44px;
-        display: grid;
-        grid-template-columns: 1fr;
-        gap: 22px;
+        padding: 48px 32px 48px;
       }
 
-      /* ────────── HEADER ────────── */
-      header.brandbar {
+      /* ───── TITLE ───── */
+      .title {
         display: grid;
         grid-template-columns: auto 1fr auto;
         align-items: center;
-        gap: 20px;
-        background: var(--ink);
-        color: #fff;
-        border-radius: var(--radius);
-        padding: 18px 22px;
-        box-shadow: var(--shadow);
-        position: relative;
-        overflow: hidden;
+        gap: 24px;
+        padding-bottom: 18px;
+        border-bottom: 1.5px solid var(--ink);
+        margin-bottom: 28px;
       }
-      header.brandbar::before {
-        content: "";
-        position: absolute;
-        inset: 0;
-        background: radial-gradient(
-            900px 200px at 80% 120%,
-            rgba(255, 91, 58, 0.18),
-            transparent 70%
-          ),
-          radial-gradient(
-            600px 220px at 0% -20%,
-            rgba(15, 154, 153, 0.25),
-            transparent 60%
-          );
-        pointer-events: none;
-      }
-      .logo {
+      .title .mark {
         display: flex;
         align-items: center;
         gap: 14px;
-        position: relative;
       }
-      .logo svg {
-        width: 56px;
-        height: 56px;
-        display: block;
+      .title .mark svg {
+        width: 44px;
+        height: 44px;
       }
-      .logo .word {
-        line-height: 1;
-      }
-      .logo .word .small {
-        font-size: 10px;
-        letter-spacing: 0.32em;
-        opacity: 0.7;
-      }
-      .logo .word .big {
-        font-size: 22px;
-        font-weight: 700;
-        letter-spacing: 0.04em;
-        margin-top: 4px;
-      }
-      .brandbar nav {
-        display: flex;
-        gap: 22px;
-        font-size: 12px;
+      .title .mark .name {
+        font-size: 13px;
+        letter-spacing: 0.3em;
         text-transform: uppercase;
-        letter-spacing: 0.2em;
-        opacity: 0.85;
-        justify-self: center;
+        color: var(--ink-3);
       }
-      .brandbar nav span::before {
-        content: "◦";
-        margin-right: 8px;
-        color: var(--amber);
-      }
-      .meta {
-        text-align: right;
-        font-family: "JetBrains Mono", monospace;
-        position: relative;
-      }
-      .meta .date {
-        font-size: 14px;
-        opacity: 0.75;
-        letter-spacing: 0.08em;
-      }
-      .meta .time {
-        font-size: 28px;
+      .title .mark .clinic {
+        font-size: 15px;
         font-weight: 600;
         margin-top: 2px;
+        letter-spacing: 0.02em;
       }
-      .meta .live {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        margin-top: 4px;
-        font-size: 11px;
-        text-transform: uppercase;
-        letter-spacing: 0.22em;
-        opacity: 0.8;
-      }
-      .meta .pulse {
-        width: 8px;
-        height: 8px;
-        background: var(--coral);
-        border-radius: 50%;
-        animation: pulse 1.6s ease-in-out infinite;
-      }
-      @keyframes pulse {
-        0%,
-        100% {
-          transform: scale(1);
-          opacity: 1;
-        }
-        50% {
-          transform: scale(1.6);
-          opacity: 0.5;
-        }
-      }
-
-      /* ────────── HERO STRIP ────────── */
-      .hero {
-        background: var(--paper);
-        border: 2px solid var(--ink);
-        border-radius: var(--radius);
-        padding: 16px 22px;
-        display: grid;
-        grid-template-columns: auto 1fr auto;
-        gap: 20px;
-        align-items: center;
-        box-shadow: var(--shadow);
-      }
-      .hero .tag {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        background: var(--ink);
-        color: #fff;
-        padding: 6px 12px;
-        border-radius: 999px;
-        font-size: 11px;
-        text-transform: uppercase;
-        letter-spacing: 0.22em;
-      }
-      .hero .tag .dot {
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
-        background: var(--coral);
-      }
-      .hero .title {
-        font-size: 22px;
-        font-weight: 700;
-        letter-spacing: -0.01em;
-      }
-      .hero .title em {
-        font-style: normal;
-        color: var(--teal);
-        background: var(--mint);
-        padding: 0 8px;
-        border-radius: 6px;
-      }
-      .hero .now-up {
-        display: flex;
-        gap: 18px;
-        align-items: center;
-      }
-      .now-up .now-box {
-        display: grid;
-        grid-template-columns: auto 1fr;
-        gap: 10px;
-        align-items: center;
-        padding: 8px 14px;
-        border: 1.5px dashed var(--ink);
-        border-radius: 14px;
-        background: #fff;
-      }
-      .now-up .now-box .room {
-        font-family: "JetBrains Mono", monospace;
-        font-weight: 700;
-        font-size: 24px;
-        color: var(--coral);
-      }
-      .now-up .now-box .who {
-        font-size: 12px;
-        line-height: 1.2;
-        color: var(--ink-2);
-      }
-      .now-up .now-box .who b {
-        font-weight: 700;
-        color: var(--ink);
-        font-size: 13px;
-      }
-
-      /* ────────── MAIN GRID ────────── */
-      .main {
-        display: grid;
-        grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
-        gap: 22px;
-        align-items: start;
-      }
-      @media (max-width: 1050px) {
-        .main {
-          grid-template-columns: 1fr;
-        }
-      }
-
-      /* ────────── PANEL BASE ────────── */
-      .panel {
-        background: var(--paper);
-        border: 2px solid var(--ink);
-        border-radius: var(--radius);
-        box-shadow: var(--shadow);
-        overflow: hidden;
-      }
-      .panel-head {
-        display: flex;
-        justify-content: space-between;
-        align-items: baseline;
-        padding: 14px 20px;
-        border-bottom: 2px solid var(--ink);
-        background: var(--ink);
-        color: #fff;
-      }
-      .panel-head h2 {
+      .title h1 {
         margin: 0;
-        font-size: 14px;
-        letter-spacing: 0.28em;
-        text-transform: uppercase;
-        font-weight: 600;
+        text-align: center;
+        font-size: clamp(28px, 4vw, 44px);
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        line-height: 1;
       }
-      .panel-head .hint {
-        font-size: 11px;
-        letter-spacing: 0.18em;
-        text-transform: uppercase;
-        opacity: 0.75;
+      .title .week {
         font-family: "JetBrains Mono", monospace;
+        font-size: 12px;
+        letter-spacing: 0.16em;
+        color: var(--ink-3);
+        text-transform: uppercase;
+        text-align: right;
+      }
+      .title .week b {
+        display: block;
+        color: var(--ink);
+        font-size: 15px;
+        letter-spacing: 0.08em;
+        margin-top: 2px;
       }
 
-      /* ────────── SCHEDULE CARDS ────────── */
-      .cards {
-        padding: 16px;
+      /* ───── CARDS GRID ───── */
+      .grid {
         display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 14px;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 18px;
       }
-      @media (max-width: 720px) {
-        .cards {
+      @media (max-width: 980px) {
+        .grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+      @media (max-width: 640px) {
+        .grid {
           grid-template-columns: 1fr;
         }
       }
+
       .card {
         background: var(--paper);
         border: 1.5px solid var(--ink);
-        border-radius: 14px;
-        padding: 14px 14px 12px;
-        display: grid;
-        grid-template-columns: 64px 1fr;
-        column-gap: 14px;
-        row-gap: 8px;
+        border-radius: var(--radius);
+        padding: 18px 18px 14px;
         position: relative;
-        overflow: hidden;
+        display: grid;
+        grid-template-columns: 56px 1fr auto;
+        column-gap: 14px;
+        row-gap: 12px;
+        align-items: start;
       }
       .card::before {
         content: "";
@@ -359,504 +149,147 @@
         left: 0;
         top: 0;
         bottom: 0;
-        width: 6px;
+        width: 5px;
         background: var(--accent, var(--teal));
+        border-radius: var(--radius) 0 0 var(--radius);
       }
-      .avatar {
-        grid-row: 1 / span 2;
-        width: 64px;
-        height: 64px;
-        border-radius: 16px;
+      .card .avatar {
+        width: 56px;
+        height: 56px;
+        border-radius: 14px;
         background: var(--accent, var(--teal));
         color: #fff;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: 700;
-        font-size: 20px;
-        letter-spacing: 0.04em;
-        position: relative;
-        overflow: hidden;
-        flex-shrink: 0;
-      }
-      .avatar::after {
-        content: "";
-        position: absolute;
-        inset: 0;
-        background: radial-gradient(
-            120% 80% at 100% 100%,
-            rgba(255, 255, 255, 0.25),
-            transparent 60%
-          );
-      }
-      .card .head {
         display: grid;
-        grid-template-columns: 1fr auto;
-        align-items: baseline;
-        gap: 6px;
+        place-items: center;
+        font-weight: 700;
+        font-size: 18px;
+        letter-spacing: 0.04em;
+        grid-row: 1;
+      }
+      .card .who {
+        min-width: 0;
+        grid-row: 1;
       }
       .card .name {
-        font-size: 16px;
+        font-size: 18px;
         font-weight: 700;
-        letter-spacing: -0.01em;
+        line-height: 1.15;
+        letter-spacing: -0.005em;
       }
-      .card .specialty {
+      .card .title-line {
+        margin-top: 4px;
         font-family: "JetBrains Mono", monospace;
         font-size: 11px;
         color: var(--ink-3);
         text-transform: uppercase;
-        letter-spacing: 0.14em;
+        letter-spacing: 0.18em;
       }
       .card .room {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        padding: 4px 10px;
-        border-radius: 999px;
+        align-self: start;
+        grid-row: 1;
+        display: inline-grid;
+        grid-template-rows: auto auto;
+        gap: 2px;
+        text-align: right;
+        padding: 6px 10px;
+        border: 1.5px solid var(--accent, var(--teal));
+        border-radius: 10px;
+        background: color-mix(in srgb, var(--accent, var(--teal)) 8%, #fff);
+        min-width: 78px;
+      }
+      .card .room .label {
+        font-size: 9px;
+        letter-spacing: 0.22em;
+        color: var(--accent, var(--teal));
+        text-transform: uppercase;
+        font-family: "JetBrains Mono", monospace;
+        font-weight: 600;
+      }
+      .card .room .num {
         font-family: "JetBrains Mono", monospace;
         font-weight: 700;
-        font-size: 13px;
-        color: #fff;
-        background: var(--accent, var(--teal));
+        font-size: 22px;
+        color: var(--accent, var(--teal));
+        line-height: 1;
       }
-      .card .room svg {
-        width: 12px;
-        height: 12px;
-      }
-      .card .row {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 6px;
-        align-items: center;
-      }
-      .pill {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        padding: 3px 9px;
-        border-radius: 999px;
-        font-size: 11px;
-        font-weight: 500;
-        background: var(--mint);
-        color: var(--teal);
-        border: 1px solid currentColor;
-      }
-      .pill.dot::before {
-        content: "";
-        width: 6px;
-        height: 6px;
-        background: currentColor;
-        border-radius: 50%;
-      }
-      .pill.in-session {
-        background: #ffe2da;
-        color: var(--coral);
-      }
-      .pill.available {
-        background: #d8efe1;
-        color: #16794a;
-      }
-      .pill.break {
-        background: #fff1cc;
-        color: #b3811d;
-      }
-      .pill.off {
-        background: #ebe7e2;
+      .card .room .floor {
+        font-size: 10px;
         color: var(--ink-3);
+        letter-spacing: 0.1em;
+        font-family: "JetBrains Mono", monospace;
+        text-transform: uppercase;
       }
 
-      .weekstrip {
+      .schedule {
         grid-column: 1 / -1;
         display: grid;
         grid-template-columns: repeat(7, 1fr);
         gap: 4px;
-        margin-top: 4px;
-        padding-top: 10px;
-        border-top: 1px dashed rgba(11, 31, 42, 0.25);
+        padding-top: 12px;
+        border-top: 1px dashed var(--line);
       }
-      .weekstrip .day {
+      .schedule .day {
         text-align: center;
+        padding: 6px 2px 7px;
+        border-radius: 8px;
         font-family: "JetBrains Mono", monospace;
+        font-size: 10.5px;
+        line-height: 1.1;
+        color: var(--ink-3);
+      }
+      .schedule .day b {
+        display: block;
         font-size: 9.5px;
-        color: var(--ink-3);
-        padding: 4px 0 2px;
-        border-radius: 8px;
-        line-height: 1.15;
-      }
-      .weekstrip .day b {
-        display: block;
-        font-size: 10px;
         font-weight: 700;
+        letter-spacing: 0.14em;
         color: var(--ink-2);
-        letter-spacing: 0.1em;
+        margin-bottom: 3px;
       }
-      .weekstrip .day.work {
-        background: var(--mint);
-        color: var(--teal);
+      .schedule .day.work {
+        background: color-mix(in srgb, var(--accent, var(--teal)) 14%, #fff);
+        color: var(--accent, var(--teal));
       }
-      .weekstrip .day.work b {
-        color: var(--teal);
+      .schedule .day.work b {
+        color: var(--accent, var(--teal));
       }
-      .weekstrip .day.today {
-        outline: 2px solid var(--coral);
-        outline-offset: -2px;
-      }
-
-      /* ────────── MAP PANEL ────────── */
-      .map-panel .panel-body {
-        padding: 16px;
-        display: grid;
-        gap: 14px;
-      }
-      .floors {
-        display: flex;
-        gap: 8px;
-        flex-wrap: wrap;
-      }
-      .floor-btn {
-        appearance: none;
-        border: 1.5px solid var(--ink);
-        background: #fff;
-        color: var(--ink);
-        font: inherit;
-        font-size: 12px;
-        font-weight: 600;
-        letter-spacing: 0.16em;
-        text-transform: uppercase;
-        padding: 8px 14px;
-        border-radius: 999px;
-        cursor: pointer;
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        transition: transform 0.12s ease, background 0.12s ease;
-      }
-      .floor-btn .swatch {
-        width: 10px;
-        height: 10px;
-        border-radius: 50%;
-        background: var(--swatch, var(--teal));
-      }
-      .floor-btn[aria-pressed="true"] {
-        background: var(--ink);
-        color: #fff;
-      }
-      .floor-btn:hover {
-        transform: translateY(-1px);
-      }
-
-      .map-wrap {
-        position: relative;
-        background: var(--rose);
-        border: 1.5px solid var(--ink);
-        border-radius: 14px;
-        padding: 12px;
-        overflow: hidden;
-      }
-      .map-wrap::after {
-        /* subtle grid paper texture */
-        content: "";
-        position: absolute;
-        inset: 0;
-        background-image: linear-gradient(
-            to right,
-            rgba(11, 31, 42, 0.05) 1px,
-            transparent 1px
-          ),
-          linear-gradient(
-            to bottom,
-            rgba(11, 31, 42, 0.05) 1px,
-            transparent 1px
-          );
-        background-size: 24px 24px;
-        pointer-events: none;
-      }
-      .floor-svg {
-        width: 100%;
-        height: auto;
-        display: block;
-        position: relative;
-        z-index: 1;
-      }
-      .floor-svg .wall {
-        fill: none;
-        stroke: var(--ink);
-        stroke-width: 2.4;
-        stroke-linejoin: round;
-      }
-      .floor-svg .corridor {
-        fill: #fbf6ec;
-      }
-      .floor-svg .room rect {
-        stroke: var(--ink);
-        stroke-width: 1.6;
-        fill: #fff;
-      }
-      .floor-svg .room.service rect {
-        fill: #ebe5da;
-      }
-      .floor-svg .room.doctor rect {
-        fill: var(--floor-color, var(--teal));
-        fill-opacity: 0.16;
-        stroke: var(--floor-color, var(--teal));
-        stroke-width: 1.8;
-      }
-      .floor-svg .room.doctor.active rect {
-        fill: var(--floor-color, var(--teal));
-        fill-opacity: 0.92;
-      }
-      .floor-svg .room text {
-        font-family: "JetBrains Mono", monospace;
-        font-size: 11px;
-        fill: var(--ink);
-        font-weight: 700;
-      }
-      .floor-svg .room.doctor.active text.num {
-        fill: #fff;
-      }
-      .floor-svg .room.doctor.active text.label {
-        fill: #fff;
-      }
-      .floor-svg .room text.label {
-        font-family: "Space Grotesk", sans-serif;
-        font-size: 9px;
-        font-weight: 600;
-        fill: var(--ink-3);
-        text-transform: uppercase;
-        letter-spacing: 0.08em;
-      }
-      .floor-svg .icon {
-        fill: var(--ink-3);
-      }
-      .floor-svg .you-are-here {
-        fill: var(--coral);
-      }
-      .floor-svg .you-are-here-ring {
-        fill: none;
-        stroke: var(--coral);
-        stroke-width: 2;
-        opacity: 0.5;
-        animation: ring 2s ease-in-out infinite;
-      }
-      @keyframes ring {
-        0% {
-          r: 8;
-          opacity: 0.8;
-        }
-        100% {
-          r: 22;
-          opacity: 0;
-        }
-      }
-
-      /* ────────── LEGEND & GUIDE ────────── */
-      .legend {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 14px;
-        padding: 0 16px 16px;
-      }
-      .legend .box {
-        border: 1.5px solid var(--ink);
-        border-radius: 12px;
-        padding: 10px 12px;
-        background: #fff;
-        font-size: 12px;
-      }
-      .legend h3 {
-        font-size: 10px;
-        letter-spacing: 0.22em;
-        text-transform: uppercase;
-        margin: 0 0 8px;
+      .schedule .day.off {
         color: var(--ink-3);
       }
-      .legend ul {
-        list-style: none;
-        margin: 0;
-        padding: 0;
-        display: grid;
-        gap: 5px;
-      }
-      .legend li {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-      }
-      .legend .sw {
-        width: 14px;
-        height: 14px;
-        border-radius: 4px;
-        border: 1.5px solid var(--ink);
-        flex-shrink: 0;
-      }
 
-      /* ────────── BOTTOM ROW ────────── */
-      .bottom {
-        display: grid;
-        grid-template-columns: 1.4fr 1fr 1fr;
-        gap: 22px;
-      }
-      @media (max-width: 980px) {
-        .bottom {
-          grid-template-columns: 1fr;
-        }
-      }
-      .bottom .panel {
-        padding: 16px 20px;
-      }
-      .bottom h2 {
-        margin: 0 0 10px;
-        font-size: 14px;
-        letter-spacing: 0.28em;
-        text-transform: uppercase;
-      }
-      .helpline {
-        display: grid;
-        grid-template-columns: auto 1fr;
-        gap: 14px;
-        align-items: center;
-      }
-      .helpline .ring {
-        width: 56px;
-        height: 56px;
-        border-radius: 50%;
-        display: grid;
-        place-items: center;
-        background: var(--mint);
-        color: var(--teal);
-        border: 2px solid var(--teal);
-      }
-      .helpline .ring svg {
-        width: 26px;
-        height: 26px;
-      }
-      .helpline .label {
-        font-size: 11px;
-        letter-spacing: 0.2em;
-        text-transform: uppercase;
-        color: var(--ink-3);
-      }
-      .helpline .number {
-        font-family: "JetBrains Mono", monospace;
-        font-size: 22px;
-        font-weight: 600;
-        letter-spacing: 0.04em;
-      }
-      .qr {
-        display: grid;
-        grid-template-columns: auto 1fr;
-        gap: 14px;
-        align-items: center;
-      }
-      .qr svg {
-        width: 80px;
-        height: 80px;
-        border: 1.5px solid var(--ink);
-        border-radius: 8px;
-        background: #fff;
-        padding: 4px;
-      }
-      .qr .label {
-        font-size: 11px;
-        letter-spacing: 0.2em;
-        text-transform: uppercase;
-        color: var(--ink-3);
-      }
-      .qr .desc {
-        font-size: 13px;
-        font-weight: 600;
-        margin-top: 4px;
-      }
-      .alerts {
-        display: grid;
-        gap: 8px;
-      }
-      .alert {
-        border: 1.5px dashed var(--ink);
-        border-radius: 12px;
-        padding: 10px 12px;
-        font-size: 12px;
-        background: #fff8ec;
-        display: grid;
-        grid-template-columns: auto 1fr;
-        gap: 10px;
-        align-items: start;
-      }
-      .alert.warn {
-        background: #ffe2da;
-      }
-      .alert .badge {
-        font-family: "JetBrains Mono", monospace;
-        font-size: 10px;
-        background: var(--ink);
-        color: #fff;
-        padding: 3px 8px;
-        border-radius: 999px;
-        letter-spacing: 0.16em;
-        white-space: nowrap;
-      }
-      .alert.warn .badge {
-        background: var(--coral);
-      }
-
-      /* ────────── FOOTER ────────── */
-      footer.standfoot {
+      footer.note {
+        margin-top: 28px;
+        padding-top: 14px;
+        border-top: 1px solid var(--line);
         font-family: "JetBrains Mono", monospace;
         font-size: 11px;
+        text-transform: uppercase;
         letter-spacing: 0.18em;
-        text-transform: uppercase;
         color: var(--ink-3);
         display: flex;
         justify-content: space-between;
         gap: 12px;
-        padding: 6px 4px 0;
         flex-wrap: wrap;
       }
 
-      /* ────────── PRINT ────────── */
+      /* ───── PRINT ───── */
       @media print {
         body {
           background: #fff;
         }
-        .backdrop {
-          display: none;
-        }
         .stand {
-          padding: 12px;
+          padding: 16px;
         }
-        .panel,
-        .hero,
-        header.brandbar {
-          box-shadow: none;
+        .card {
+          break-inside: avoid;
         }
       }
     </style>
   </head>
   <body>
-    <!-- Decorative backdrop -->
-    <div class="backdrop" aria-hidden="true">
-      <svg class="blob-a" viewBox="0 0 200 200">
-        <path
-          fill="#0e7c7b"
-          d="M51,-46C61,-32,60,-10,55,8C49,26,38,42,21,52C5,62,-17,67,-32,58C-46,49,-52,28,-54,7C-56,-13,-54,-32,-43,-46C-32,-60,-13,-69,5,-67C24,-65,40,-60,51,-46Z"
-          transform="translate(100 100)"
-        />
-      </svg>
-      <svg class="blob-b" viewBox="0 0 200 200">
-        <path
-          fill="#ff5b3a"
-          d="M40,-37C49,-23,52,-8,49,8C47,24,38,40,24,49C9,57,-12,57,-27,49C-43,40,-54,23,-55,5C-57,-14,-49,-33,-35,-44C-22,-55,-3,-58,13,-54C30,-51,32,-50,40,-37Z"
-          transform="translate(100 100)"
-        />
-      </svg>
-    </div>
-
     <main class="stand">
-      <!-- ── BRAND HEADER ───────────────────────────── -->
-      <header class="brandbar">
-        <div class="logo">
+      <section class="title">
+        <div class="mark">
           <svg viewBox="0 0 64 64" aria-hidden="true">
-            <!-- Aurora mark: sunrise arcs with a soft cross -->
             <defs>
               <linearGradient id="g1" x1="0" y1="1" x2="1" y2="0">
                 <stop offset="0" stop-color="#f6b745" />
@@ -865,411 +298,117 @@
               </linearGradient>
             </defs>
             <circle cx="32" cy="36" r="22" fill="url(#g1)" />
-            <path
-              d="M10 50 Q32 22 54 50"
-              stroke="#fff"
-              stroke-width="3"
-              fill="none"
-              stroke-linecap="round"
-            />
-            <path
-              d="M18 50 Q32 32 46 50"
-              stroke="#fff"
-              stroke-width="2"
-              fill="none"
-              stroke-linecap="round"
-              opacity="0.65"
-            />
-            <rect
-              x="29.5"
-              y="14"
-              width="5"
-              height="14"
-              rx="1.2"
-              fill="#fff"
-            />
-            <rect
-              x="25"
-              y="18.5"
-              width="14"
-              height="5"
-              rx="1.2"
-              fill="#fff"
-            />
+            <path d="M10 50 Q32 22 54 50" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round" />
+            <rect x="29.5" y="14" width="5" height="14" rx="1.2" fill="#fff" />
+            <rect x="25" y="18.5" width="14" height="5" rx="1.2" fill="#fff" />
           </svg>
-          <div class="word">
-            <div class="small mono">AURORA · EST 2014</div>
-            <div class="big">AURORA MEDICAL CENTER</div>
+          <div>
+            <div class="name">Aurora · Est 2014</div>
+            <div class="clinic">Aurora Medical Center</div>
           </div>
         </div>
-        <nav aria-label="Wayfinding">
-          <span>Doctors on Duty</span>
-          <span>Floor Plan</span>
-          <span>Help &amp; Info</span>
-        </nav>
-        <div class="meta">
-          <div class="date mono" id="m-date">Wed · 20 May 2026</div>
-          <div class="time mono" id="m-time">09:05</div>
-          <div class="live"><span class="pulse"></span>Live board</div>
-        </div>
-      </header>
-
-      <!-- ── HERO: NOW IN SESSION ─────────────────── -->
-      <section class="hero">
-        <div class="tag"><span class="dot"></span>Right now</div>
-        <div class="title">
-          <span>Welcome — </span>
-          <em id="hero-greeting">8 doctors are seeing patients today</em>
-        </div>
-        <div class="now-up" id="hero-nowup">
-          <!-- filled by JS -->
+        <h1>Doctor Schedule</h1>
+        <div class="week">
+          Week of
+          <b id="w-range">19 — 25 May 2026</b>
         </div>
       </section>
 
-      <!-- ── MAIN GRID ─────────────────────────────── -->
-      <div class="main">
-        <!-- ── SCHEDULE ─── -->
-        <section class="panel">
-          <div class="panel-head">
-            <h2>Today&rsquo;s Schedule</h2>
-            <span class="hint" id="schedule-hint">8 ROOMS · 3 FLOORS</span>
-          </div>
-          <div class="cards" id="cards-host"></div>
-        </section>
+      <section class="grid" id="cards-host"></section>
 
-        <!-- ── MAP ─── -->
-        <section class="panel map-panel">
-          <div class="panel-head">
-            <h2>Find Your Room</h2>
-            <span class="hint">You are here · Reception</span>
-          </div>
-          <div class="panel-body">
-            <div class="floors" id="floor-tabs" role="tablist"></div>
-            <div class="map-wrap" id="map-wrap"></div>
-          </div>
-          <div class="legend">
-            <div class="box">
-              <h3>Status</h3>
-              <ul>
-                <li>
-                  <span class="sw" style="background: #ffe2da"></span>In session
-                </li>
-                <li>
-                  <span class="sw" style="background: #d8efe1"></span>Available
-                </li>
-                <li>
-                  <span class="sw" style="background: #fff1cc"></span>On break
-                </li>
-                <li>
-                  <span class="sw" style="background: #ebe7e2"></span>Off today
-                </li>
-              </ul>
-            </div>
-            <div class="box">
-              <h3>Floors</h3>
-              <ul id="floor-legend"></ul>
-            </div>
-          </div>
-        </section>
-      </div>
-
-      <!-- ── BOTTOM ROW ─────────────────────────────── -->
-      <div class="bottom">
-        <section class="panel">
-          <h2>Notices</h2>
-          <div class="alerts">
-            <div class="alert warn">
-              <span class="badge">Closure</span>
-              <div>
-                <b>Room 312 — Neurology</b> closes early at 12:00 today for
-                equipment calibration. Walk-ins redirected to Room 102.
-              </div>
-            </div>
-            <div class="alert">
-              <span class="badge">Reminder</span>
-              <div>
-                Bring your insurance card and a photo ID. Same-day lab results
-                are available at the Pharmacy desk (Room 103) until 18:00.
-              </div>
-            </div>
-          </div>
-        </section>
-        <section class="panel">
-          <h2>Front Desk</h2>
-          <div class="helpline">
-            <div class="ring">
-              <svg viewBox="0 0 24 24" fill="currentColor">
-                <path
-                  d="M6.6 10.8a15 15 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11.5 11.5 0 0 0 3.6.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A18 18 0 0 1 3 5a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1 11.5 11.5 0 0 0 .57 3.6 1 1 0 0 1-.25 1L6.6 10.8Z"
-                />
-              </svg>
-            </div>
-            <div>
-              <div class="label">Reception · Lobby</div>
-              <div class="number" id="m-phone">+1 (555) 012-3456</div>
-            </div>
-          </div>
-          <div style="height: 12px"></div>
-          <div class="helpline">
-            <div class="ring" style="background: #fff1cc; color: #b3811d; border-color: #b3811d">
-              <svg viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 2 1 21h22L12 2Zm0 6 7.5 13h-15L12 8Zm-1 4v4h2v-4h-2Zm0 5v2h2v-2h-2Z" />
-              </svg>
-            </div>
-            <div>
-              <div class="label">Emergency</div>
-              <div class="number">911 · Floor 1, Door E</div>
-            </div>
-          </div>
-        </section>
-        <section class="panel">
-          <h2>Self-Check-in</h2>
-          <div class="qr">
-            <svg viewBox="0 0 100 100" aria-hidden="true">
-              <!-- decorative QR-style block -->
-              <rect width="100" height="100" fill="#fff" />
-              <g fill="#0b1f2a">
-                <rect x="6" y="6" width="22" height="22" />
-                <rect x="10" y="10" width="14" height="14" fill="#fff" />
-                <rect x="14" y="14" width="6" height="6" />
-                <rect x="72" y="6" width="22" height="22" />
-                <rect x="76" y="10" width="14" height="14" fill="#fff" />
-                <rect x="80" y="14" width="6" height="6" />
-                <rect x="6" y="72" width="22" height="22" />
-                <rect x="10" y="76" width="14" height="14" fill="#fff" />
-                <rect x="14" y="80" width="6" height="6" />
-                <rect x="34" y="6" width="4" height="4" />
-                <rect x="42" y="6" width="4" height="4" />
-                <rect x="50" y="6" width="4" height="4" />
-                <rect x="58" y="6" width="4" height="4" />
-                <rect x="34" y="14" width="4" height="4" />
-                <rect x="46" y="14" width="4" height="4" />
-                <rect x="62" y="14" width="4" height="4" />
-                <rect x="34" y="22" width="4" height="4" />
-                <rect x="42" y="22" width="4" height="4" />
-                <rect x="54" y="22" width="4" height="4" />
-                <rect x="62" y="22" width="4" height="4" />
-                <rect x="6" y="34" width="4" height="4" />
-                <rect x="14" y="34" width="4" height="4" />
-                <rect x="22" y="34" width="4" height="4" />
-                <rect x="34" y="34" width="4" height="4" />
-                <rect x="46" y="34" width="4" height="4" />
-                <rect x="54" y="34" width="4" height="4" />
-                <rect x="66" y="34" width="4" height="4" />
-                <rect x="74" y="34" width="4" height="4" />
-                <rect x="86" y="34" width="4" height="4" />
-                <rect x="6" y="42" width="4" height="4" />
-                <rect x="18" y="42" width="4" height="4" />
-                <rect x="30" y="42" width="4" height="4" />
-                <rect x="38" y="42" width="4" height="4" />
-                <rect x="50" y="42" width="4" height="4" />
-                <rect x="62" y="42" width="4" height="4" />
-                <rect x="70" y="42" width="4" height="4" />
-                <rect x="82" y="42" width="4" height="4" />
-                <rect x="90" y="42" width="4" height="4" />
-                <rect x="14" y="50" width="4" height="4" />
-                <rect x="22" y="50" width="4" height="4" />
-                <rect x="34" y="50" width="4" height="4" />
-                <rect x="42" y="50" width="4" height="4" />
-                <rect x="54" y="50" width="4" height="4" />
-                <rect x="66" y="50" width="4" height="4" />
-                <rect x="74" y="50" width="4" height="4" />
-                <rect x="86" y="50" width="4" height="4" />
-                <rect x="6" y="58" width="4" height="4" />
-                <rect x="18" y="58" width="4" height="4" />
-                <rect x="26" y="58" width="4" height="4" />
-                <rect x="38" y="58" width="4" height="4" />
-                <rect x="46" y="58" width="4" height="4" />
-                <rect x="58" y="58" width="4" height="4" />
-                <rect x="70" y="58" width="4" height="4" />
-                <rect x="82" y="58" width="4" height="4" />
-                <rect x="90" y="58" width="4" height="4" />
-                <rect x="14" y="66" width="4" height="4" />
-                <rect x="26" y="66" width="4" height="4" />
-                <rect x="34" y="66" width="4" height="4" />
-                <rect x="46" y="66" width="4" height="4" />
-                <rect x="62" y="66" width="4" height="4" />
-                <rect x="78" y="66" width="4" height="4" />
-                <rect x="86" y="66" width="4" height="4" />
-                <rect x="34" y="74" width="4" height="4" />
-                <rect x="46" y="74" width="4" height="4" />
-                <rect x="54" y="74" width="4" height="4" />
-                <rect x="66" y="74" width="4" height="4" />
-                <rect x="78" y="74" width="4" height="4" />
-                <rect x="86" y="74" width="4" height="4" />
-                <rect x="38" y="82" width="4" height="4" />
-                <rect x="46" y="82" width="4" height="4" />
-                <rect x="58" y="82" width="4" height="4" />
-                <rect x="70" y="82" width="4" height="4" />
-                <rect x="82" y="82" width="4" height="4" />
-                <rect x="34" y="90" width="4" height="4" />
-                <rect x="42" y="90" width="4" height="4" />
-                <rect x="50" y="90" width="4" height="4" />
-                <rect x="62" y="90" width="4" height="4" />
-                <rect x="74" y="90" width="4" height="4" />
-                <rect x="86" y="90" width="4" height="4" />
-              </g>
-            </svg>
-            <div>
-              <div class="label">Scan to check in</div>
-              <div class="desc">
-                Skip the line — confirm your visit from your phone.
-              </div>
-            </div>
-          </div>
-        </section>
-      </div>
-
-      <footer class="standfoot">
-        <div>Aurora Medical Center · 12 Lakeside Avenue · Floors 1–3</div>
-        <div id="m-rev">Board rev. 2026.05 — auto-refresh every minute</div>
+      <footer class="note">
+        <div id="f-updated">Updated: 20 May 2026</div>
+        <div>All times local · 24-hour format</div>
       </footer>
     </main>
 
     <!--
       ════════════════════════════════════════════════
        STAND DATA  ──  Edit this block to update the
-       schedule, doctors, rooms and floor layout. The
-       UI re-renders from this object on page load.
+       schedule. Each doctor needs: name, title, room,
+       floor and weekly hours. The grid re-renders on
+       page load.
       ════════════════════════════════════════════════
     -->
     <script>
       const STAND_DATA = {
-        clinic: {
-          name: "AURORA MEDICAL CENTER",
-          tagline: "Healing in motion",
-          address: "12 Lakeside Avenue, Floors 1–3",
-          phone: "+1 (555) 012-3456",
-          revision: "2026.05",
-        },
-        // ISO day index (Mon=0..Sun=6). Used to highlight today's column.
-        today: 2, // Wednesday
-        // Floors are referenced by id from each doctor's `floor` field.
-        floors: [
-          { id: 1, name: "Ground", subtitle: "Lobby · Family Care · Pharmacy", color: "#0e7c7b" },
-          { id: 2, name: "Second", subtitle: "Specialists · Imaging", color: "#c8553d" },
-          { id: 3, name: "Third", subtitle: "Neurology · Therapy", color: "#5b5fb2" },
-        ],
+        clinic: { name: "Aurora Medical Center" },
+        weekRange: "19 — 25 May 2026",
+        updated: "20 May 2026",
         doctors: [
           {
-            id: "park",
             name: "Dr. Eleanor Park",
-            specialty: "Cardiology",
+            title: "Cardiologist",
             room: 203,
             floor: 2,
-            status: "in-session", // in-session | available | break | off
+            accent: "#0e7c7b",
             week: { mon: "09:00–13:00", tue: "—", wed: "09:00–13:00", thu: "—", fri: "09:00–13:00", sat: "—", sun: "—" },
           },
           {
-            id: "tanaka",
             name: "Dr. Hiro Tanaka",
-            specialty: "Pediatrics",
+            title: "Pediatrician",
             room: 105,
             floor: 1,
-            status: "available",
+            accent: "#c8553d",
             week: { mon: "10:00–16:00", tue: "—", wed: "10:00–16:00", thu: "—", fri: "10:00–16:00", sat: "—", sun: "—" },
           },
           {
-            id: "reyes",
             name: "Dr. Sofia Reyes",
-            specialty: "Dermatology",
+            title: "Dermatologist",
             room: 211,
             floor: 2,
-            status: "break",
+            accent: "#5b5fb2",
             week: { mon: "—", tue: "14:00–18:00", wed: "14:00–18:00", thu: "14:00–18:00", fri: "—", sat: "—", sun: "—" },
           },
           {
-            id: "chen",
             name: "Dr. Marcus Chen",
-            specialty: "Neurology",
+            title: "Neurologist",
             room: 312,
             floor: 3,
-            status: "in-session",
+            accent: "#0e7c7b",
             week: { mon: "08:00–12:00", tue: "08:00–12:00", wed: "08:00–12:00", thu: "08:00–12:00", fri: "08:00–12:00", sat: "—", sun: "—" },
           },
           {
-            id: "volkov",
             name: "Dr. Anya Volkov",
-            specialty: "Family Medicine",
+            title: "Family Physician",
             room: 102,
             floor: 1,
-            status: "available",
+            accent: "#c8553d",
             week: { mon: "08:00–18:00", tue: "08:00–18:00", wed: "08:00–18:00", thu: "08:00–18:00", fri: "08:00–18:00", sat: "10:00–14:00", sun: "—" },
           },
           {
-            id: "oconnor",
             name: "Dr. Liam O'Connor",
-            specialty: "Orthopedics",
+            title: "Orthopedic Surgeon",
             room: 305,
             floor: 3,
-            status: "off",
+            accent: "#5b5fb2",
             week: { mon: "13:00–17:00", tue: "13:00–17:00", wed: "—", thu: "—", fri: "13:00–17:00", sat: "—", sun: "—" },
           },
           {
-            id: "nasser",
             name: "Dr. Yara Nasser",
-            specialty: "Ophthalmology",
+            title: "Ophthalmologist",
             room: 217,
             floor: 2,
-            status: "in-session",
+            accent: "#0e7c7b",
             week: { mon: "09:00–13:00", tue: "—", wed: "09:00–13:00", thu: "—", fri: "09:00–13:00", sat: "—", sun: "—" },
           },
           {
-            id: "okoye",
             name: "Dr. Adaeze Okoye",
-            specialty: "Endocrinology",
+            title: "Endocrinologist",
             room: 320,
             floor: 3,
-            status: "available",
+            accent: "#c8553d",
             week: { mon: "—", tue: "10:00–16:00", wed: "10:00–16:00", thu: "10:00–16:00", fri: "—", sat: "—", sun: "—" },
           },
+          {
+            name: "Dr. Noah Bennett",
+            title: "General Surgeon",
+            room: 208,
+            floor: 2,
+            accent: "#5b5fb2",
+            week: { mon: "07:30–11:30", tue: "07:30–11:30", wed: "—", thu: "07:30–11:30", fri: "—", sat: "—", sun: "—" },
+          },
         ],
-        // Floor plans are defined declaratively as room rectangles + service icons.
-        // Coordinates use the SVG viewBox 0..600 x 0..360.
-        plans: {
-          1: {
-            corridor: { x: 40, y: 150, w: 520, h: 70 },
-            rooms: [
-              { num: 101, label: "Reception", x: 40, y: 60, w: 110, h: 90, type: "service" },
-              { num: 102, label: "Family Medicine", x: 160, y: 40, w: 110, h: 110, doctor: "volkov" },
-              { num: 103, label: "Pharmacy", x: 280, y: 60, w: 90, h: 90, type: "service" },
-              { num: 105, label: "Pediatrics", x: 380, y: 40, w: 110, h: 110, doctor: "tanaka" },
-              { num: 107, label: "Laboratory", x: 500, y: 60, w: 60, h: 90, type: "service" },
-              { num: 110, label: "Restrooms", x: 40, y: 220, w: 70, h: 100, type: "service" },
-              { num: 111, label: "Cafe", x: 120, y: 220, w: 120, h: 100, type: "service" },
-              { num: 112, label: "Waiting Lounge", x: 250, y: 220, w: 200, h: 100, type: "service" },
-              { num: 115, label: "Emergency Exit", x: 460, y: 220, w: 100, h: 100, type: "service" },
-            ],
-          },
-          2: {
-            corridor: { x: 40, y: 150, w: 520, h: 70 },
-            rooms: [
-              { num: 201, label: "Records", x: 40, y: 60, w: 90, h: 90, type: "service" },
-              { num: 203, label: "Cardiology", x: 140, y: 40, w: 120, h: 110, doctor: "park" },
-              { num: 207, label: "ECG", x: 270, y: 60, w: 80, h: 90, type: "service" },
-              { num: 211, label: "Dermatology", x: 360, y: 40, w: 110, h: 110, doctor: "reyes" },
-              { num: 215, label: "X-Ray", x: 480, y: 60, w: 80, h: 90, type: "service" },
-              { num: 217, label: "Ophthalmology", x: 40, y: 220, w: 130, h: 100, doctor: "nasser" },
-              { num: 218, label: "Ultrasound", x: 180, y: 220, w: 110, h: 100, type: "service" },
-              { num: 219, label: "Phlebotomy", x: 300, y: 220, w: 90, h: 100, type: "service" },
-              { num: 220, label: "Specialist Lounge", x: 400, y: 220, w: 160, h: 100, type: "service" },
-            ],
-          },
-          3: {
-            corridor: { x: 40, y: 150, w: 520, h: 70 },
-            rooms: [
-              { num: 301, label: "Admin", x: 40, y: 60, w: 90, h: 90, type: "service" },
-              { num: 305, label: "Orthopedics", x: 140, y: 40, w: 120, h: 110, doctor: "oconnor" },
-              { num: 308, label: "Imaging", x: 270, y: 60, w: 80, h: 90, type: "service" },
-              { num: 312, label: "Neurology", x: 360, y: 40, w: 110, h: 110, doctor: "chen" },
-              { num: 315, label: "MRI Suite", x: 480, y: 60, w: 80, h: 90, type: "service" },
-              { num: 320, label: "Endocrinology", x: 40, y: 220, w: 130, h: 100, doctor: "okoye" },
-              { num: 322, label: "Physical Therapy", x: 180, y: 220, w: 160, h: 100, type: "service" },
-              { num: 325, label: "Conference", x: 350, y: 220, w: 110, h: 100, type: "service" },
-              { num: 327, label: "Stairwell", x: 470, y: 220, w: 90, h: 100, type: "service" },
-            ],
-          },
-        },
       };
 
       // ════════════════════════════════════════════════
@@ -1277,19 +416,6 @@
       // ════════════════════════════════════════════════
       const DAYS = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"];
       const DAY_LABELS = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
-      const STATUS_LABELS = {
-        "in-session": "In session",
-        available: "Available",
-        break: "On break",
-        off: "Off today",
-      };
-
-      const FLOOR_BY_ID = Object.fromEntries(
-        STAND_DATA.floors.map((f) => [f.id, f])
-      );
-      const DOC_BY_ID = Object.fromEntries(
-        STAND_DATA.doctors.map((d) => [d.id, d])
-      );
 
       function initials(name) {
         return name
@@ -1316,241 +442,43 @@
         );
       }
 
-      function renderCards() {
+      function render() {
+        document.getElementById("w-range").textContent =
+          STAND_DATA.weekRange;
+        document.getElementById(
+          "f-updated"
+        ).textContent = `Updated: ${STAND_DATA.updated}`;
+
         const host = document.getElementById("cards-host");
         host.innerHTML = STAND_DATA.doctors
           .map((d) => {
-            const floor = FLOOR_BY_ID[d.floor];
-            const accent = floor ? floor.color : "#0e7c7b";
-            const today = DAYS[STAND_DATA.today];
-            const weekHtml = DAYS.map((day, i) => {
+            const week = DAYS.map((day, i) => {
               const hours = d.week[day] || "—";
-              const isWork = hours !== "—";
-              const cls = [
-                "day",
-                isWork ? "work" : "",
-                day === today ? "today" : "",
-              ]
-                .filter(Boolean)
-                .join(" ");
+              const cls = hours !== "—" ? "day work" : "day off";
               return `<div class="${cls}"><b>${DAY_LABELS[i]}</b>${escapeHtml(
                 hours
               )}</div>`;
             }).join("");
             return `
-              <article class="card" style="--accent:${accent}">
+              <article class="card" style="--accent:${d.accent}">
                 <div class="avatar">${initials(d.name)}</div>
-                <div class="head">
-                  <div>
-                    <div class="name">${escapeHtml(d.name)}</div>
-                    <div class="specialty">${escapeHtml(d.specialty)}</div>
-                  </div>
-                  <div class="room">
-                    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                      <path d="M12 2 3 7v13h6v-6h6v6h6V7l-9-5Z"/>
-                    </svg>
-                    ${d.room}
-                  </div>
+                <div class="who">
+                  <div class="name">${escapeHtml(d.name)}</div>
+                  <div class="title-line">${escapeHtml(d.title)}</div>
                 </div>
-                <div class="row">
-                  <span class="pill ${d.status}">${
-                    STATUS_LABELS[d.status]
-                  }</span>
-                  <span class="pill dot" style="background:#fff;color:${accent};border-color:${accent}">Floor ${
-                    d.floor
-                  } · ${escapeHtml(floor.name)}</span>
+                <div class="room" aria-label="Room ${d.room}, floor ${d.floor}">
+                  <div class="label">Room</div>
+                  <div class="num">${d.room}</div>
+                  <div class="floor">Floor ${d.floor}</div>
                 </div>
-                <div class="weekstrip">${weekHtml}</div>
+                <div class="schedule">${week}</div>
               </article>
             `;
           })
           .join("");
-
-        const inSession = STAND_DATA.doctors.filter(
-          (d) => d.status === "in-session" || d.status === "available"
-        ).length;
-        document.getElementById("hero-greeting").textContent =
-          `${inSession} doctors are seeing patients today`;
-        document.getElementById("schedule-hint").textContent = `${
-          STAND_DATA.doctors.length
-        } ROOMS · ${STAND_DATA.floors.length} FLOORS`;
       }
 
-      function renderHeroNow() {
-        const host = document.getElementById("hero-nowup");
-        const inSession = STAND_DATA.doctors
-          .filter((d) => d.status === "in-session")
-          .slice(0, 2);
-        host.innerHTML = inSession
-          .map((d) => {
-            const floor = FLOOR_BY_ID[d.floor];
-            return `
-              <div class="now-box">
-                <div class="room mono" style="color:${floor.color}">${d.room}</div>
-                <div class="who"><b>${escapeHtml(d.name)}</b><br/>${escapeHtml(d.specialty)} · Floor ${d.floor}</div>
-              </div>`;
-          })
-          .join("");
-      }
-
-      function renderFloorTabs() {
-        const host = document.getElementById("floor-tabs");
-        host.innerHTML = STAND_DATA.floors
-          .map(
-            (f, idx) => `
-            <button class="floor-btn" role="tab" data-floor="${f.id}" aria-pressed="${
-              idx === 0 ? "true" : "false"
-            }" style="--swatch:${f.color}">
-              <span class="swatch"></span>FLOOR ${f.id} · ${escapeHtml(f.name)}
-            </button>`
-          )
-          .join("");
-        host.addEventListener("click", (e) => {
-          const btn = e.target.closest(".floor-btn");
-          if (!btn) return;
-          host.querySelectorAll(".floor-btn").forEach((b) =>
-            b.setAttribute(
-              "aria-pressed",
-              b === btn ? "true" : "false"
-            )
-          );
-          renderFloor(Number(btn.dataset.floor));
-        });
-
-        const legend = document.getElementById("floor-legend");
-        legend.innerHTML = STAND_DATA.floors
-          .map(
-            (f) => `
-            <li>
-              <span class="sw" style="background:${f.color}"></span>
-              Floor ${f.id} — <span style="opacity:.7;margin-left:4px">${escapeHtml(
-                f.subtitle
-              )}</span>
-            </li>`
-          )
-          .join("");
-      }
-
-      function renderFloor(id) {
-        const plan = STAND_DATA.plans[id];
-        const floor = FLOOR_BY_ID[id];
-        const wrap = document.getElementById("map-wrap");
-        if (!plan || !floor) {
-          wrap.innerHTML = "";
-          return;
-        }
-        const rooms = plan.rooms
-          .map((r) => {
-            const isDoc = !!r.doctor;
-            const doc = isDoc ? DOC_BY_ID[r.doctor] : null;
-            const active = doc && doc.status === "in-session";
-            const cls = [
-              "room",
-              isDoc ? "doctor" : "service",
-              active ? "active" : "",
-            ]
-              .filter(Boolean)
-              .join(" ");
-            const labelY = r.y + r.h - 10;
-            const numY = r.y + 22;
-            return `
-              <g class="${cls}" style="--floor-color:${floor.color}">
-                <rect x="${r.x}" y="${r.y}" width="${r.w}" height="${r.h}" rx="6" />
-                <text class="num" x="${r.x + 8}" y="${numY}">#${r.num}</text>
-                <text class="label" x="${r.x + 8}" y="${labelY}">${escapeHtml(
-                  r.label
-                )}</text>
-                ${
-                  doc
-                    ? `<text x="${r.x + r.w - 8}" y="${
-                        r.y + 22
-                      }" text-anchor="end" font-family="Space Grotesk" font-size="10" font-weight="600" fill="${
-                        active ? "#fff" : floor.color
-                      }">${escapeHtml(initials(doc.name))}</text>`
-                    : ""
-                }
-              </g>`;
-          })
-          .join("");
-
-        // "You are here" pin on Floor 1 (Reception) — placed in the
-        // top-right corner of the room so it does not overlap the label.
-        const youAreHere =
-          id === 1
-            ? `
-              <g>
-                <circle class="you-are-here-ring" cx="132" cy="82" r="10" />
-                <circle class="you-are-here" cx="132" cy="82" r="5" />
-                <text x="132" y="50" text-anchor="middle" font-family="Space Grotesk" font-size="9" font-weight="700" fill="#ff5b3a" letter-spacing="0.2em">YOU ARE HERE</text>
-                <path d="M132 56 L132 72" stroke="#ff5b3a" stroke-width="1.5" stroke-dasharray="2 2"/>
-              </g>`
-            : "";
-
-        // Elevator + stairs icons
-        const services = `
-          <g class="icon" font-family="JetBrains Mono" font-size="10" font-weight="700">
-            <rect x="540" y="160" width="20" height="50" rx="3" fill="#0b1f2a" />
-            <text x="550" y="190" text-anchor="middle" fill="#fff">⬍</text>
-            <text x="550" y="225" text-anchor="middle" fill="#0b1f2a">EL</text>
-            <rect x="40" y="160" width="20" height="50" rx="3" fill="#0b1f2a" />
-            <text x="50" y="190" text-anchor="middle" fill="#fff">▲</text>
-            <text x="50" y="225" text-anchor="middle" fill="#0b1f2a">ST</text>
-          </g>`;
-
-        // North arrow
-        const compass = `
-          <g transform="translate(560,30)">
-            <circle r="14" fill="#fff" stroke="#0b1f2a" stroke-width="1.5"/>
-            <path d="M0,-9 L4,4 L0,1 L-4,4 Z" fill="#ff5b3a"/>
-            <text y="-16" text-anchor="middle" font-family="JetBrains Mono" font-size="8" font-weight="700" fill="#0b1f2a">N</text>
-          </g>`;
-
-        wrap.innerHTML = `
-          <svg class="floor-svg" viewBox="0 0 600 360" role="img" aria-label="Floor ${id} plan">
-            <rect class="corridor" x="${plan.corridor.x}" y="${plan.corridor.y}" width="${plan.corridor.w}" height="${plan.corridor.h}" rx="6"/>
-            <text x="${
-              plan.corridor.x + plan.corridor.w / 2
-            }" y="${
-              plan.corridor.y + plan.corridor.h / 2 + 4
-            }" text-anchor="middle" font-family="JetBrains Mono" font-size="11" letter-spacing="0.32em" fill="#5b6b75">— CORRIDOR —</text>
-            <rect class="wall" x="36" y="36" width="528" height="288" rx="10"/>
-            ${rooms}
-            ${services}
-            ${youAreHere}
-            ${compass}
-          </svg>`;
-      }
-
-      function updateClock() {
-        const now = new Date();
-        const opts = {
-          weekday: "short",
-          day: "2-digit",
-          month: "short",
-          year: "numeric",
-        };
-        document.getElementById("m-date").textContent = now
-          .toLocaleDateString("en-GB", opts)
-          .replace(",", " ·");
-        const hh = String(now.getHours()).padStart(2, "0");
-        const mm = String(now.getMinutes()).padStart(2, "0");
-        document.getElementById("m-time").textContent = `${hh}:${mm}`;
-      }
-
-      function init() {
-        document.getElementById("m-phone").textContent = STAND_DATA.clinic.phone;
-        document.getElementById(
-          "m-rev"
-        ).textContent = `Board rev. ${STAND_DATA.clinic.revision} — auto-refresh every minute`;
-        renderCards();
-        renderHeroNow();
-        renderFloorTabs();
-        renderFloor(STAND_DATA.floors[0].id);
-        updateClock();
-        setInterval(updateClock, 30 * 1000);
-      }
-
-      document.addEventListener("DOMContentLoaded", init);
+      document.addEventListener("DOMContentLoaded", render);
     </script>
   </body>
 </html>
