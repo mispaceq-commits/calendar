@@ -1,0 +1,581 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>On Duty — Aurora Medical Center</title>
+    <meta
+      name="description"
+      content="Weekly attending doctors — name, title, room and hours."
+    />
+    <link
+      rel="preconnect"
+      href="https://fonts.gstatic.com"
+      crossorigin="anonymous"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=IBM+Plex+Mono:wght@300;400;500;600&family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --ink: #0a1418;
+        --ink-2: #122029;
+        --paper: #f5ead2;
+        --paper-2: #ebd9a6;
+        --paper-3: rgba(245, 234, 210, 0.5);
+        --paper-4: rgba(245, 234, 210, 0.18);
+        --gold: #e8b557;
+        --rust: #d96a3d;
+        --moss: #6ea58a;
+        --rule: rgba(245, 234, 210, 0.16);
+        --rule-strong: rgba(245, 234, 210, 0.35);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        background: var(--ink);
+        color: var(--paper);
+        font-family: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+        font-feature-settings: "tnum", "ss01";
+        -webkit-font-smoothing: antialiased;
+        text-rendering: optimizeLegibility;
+      }
+
+      .mono {
+        font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, monospace;
+      }
+      .serif {
+        font-family: "DM Serif Display", "Times New Roman", serif;
+      }
+
+      /* ───── PAGE FRAME ───── */
+      .board {
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: 56px 36px 56px;
+        position: relative;
+      }
+
+      /* Decorative corner brackets */
+      .corner {
+        position: absolute;
+        width: 28px;
+        height: 28px;
+        border: 2px solid var(--paper-3);
+        pointer-events: none;
+      }
+      .corner.tl { top: 24px; left: 24px; border-right: none; border-bottom: none; }
+      .corner.tr { top: 24px; right: 24px; border-left: none; border-bottom: none; }
+      .corner.bl { bottom: 24px; left: 24px; border-right: none; border-top: none; }
+      .corner.br { bottom: 24px; right: 24px; border-left: none; border-top: none; }
+
+      /* ───── HEAD ───── */
+      .head {
+        display: grid;
+        grid-template-columns: 1fr auto 1fr;
+        align-items: end;
+        gap: 24px;
+        padding-bottom: 22px;
+        border-bottom: 1px solid var(--rule-strong);
+        margin-bottom: 6px;
+      }
+      .head .left {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 11px;
+        letter-spacing: 0.28em;
+        text-transform: uppercase;
+        color: var(--paper-3);
+        line-height: 1.5;
+      }
+      .head .left b {
+        display: block;
+        color: var(--paper);
+        font-weight: 500;
+        margin-top: 4px;
+        font-size: 13px;
+        letter-spacing: 0.16em;
+      }
+      .head .center {
+        text-align: center;
+      }
+      .head .center .pre {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 11px;
+        letter-spacing: 0.42em;
+        color: var(--gold);
+        text-transform: uppercase;
+      }
+      .head .center h1 {
+        margin: 4px 0 0;
+        font-family: "DM Serif Display", serif;
+        font-weight: 400;
+        font-size: clamp(40px, 6vw, 64px);
+        letter-spacing: -0.01em;
+        line-height: 0.95;
+        color: var(--paper);
+      }
+      .head .center h1 em {
+        font-style: italic;
+        color: var(--gold);
+      }
+      .head .right {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 11px;
+        letter-spacing: 0.22em;
+        color: var(--paper-3);
+        text-transform: uppercase;
+        text-align: right;
+        line-height: 1.5;
+      }
+      .head .right b {
+        display: block;
+        color: var(--paper);
+        font-weight: 500;
+        margin-top: 4px;
+        font-size: 13px;
+        letter-spacing: 0.12em;
+      }
+
+      .subhead {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 10px;
+        letter-spacing: 0.26em;
+        color: var(--paper-3);
+        text-transform: uppercase;
+        margin: 18px 0 8px;
+      }
+      .subhead .ticker {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .subhead .ticker .pulse {
+        width: 6px;
+        height: 6px;
+        background: var(--gold);
+        border-radius: 50%;
+        box-shadow: 0 0 8px var(--gold);
+        animation: pulse 2s ease-in-out infinite;
+      }
+      @keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.35; }
+      }
+
+      /* ───── TABLE / TIMETABLE ───── */
+      .table {
+        border-top: 1px solid var(--rule-strong);
+      }
+      .row {
+        display: grid;
+        grid-template-columns: 56px 2.4fr 1.6fr 0.9fr repeat(7, minmax(0, 1fr));
+        gap: 0;
+        align-items: stretch;
+        border-bottom: 1px solid var(--rule);
+        position: relative;
+      }
+      .row::before {
+        content: "";
+        position: absolute;
+        left: 0; right: 0; top: 0; bottom: 0;
+        background: linear-gradient(
+          90deg,
+          var(--paper-4) 0%,
+          transparent 12%
+        );
+        opacity: 0;
+        transition: opacity 0.2s ease;
+        pointer-events: none;
+      }
+      .row.head-row {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 10.5px;
+        letter-spacing: 0.22em;
+        color: var(--paper-3);
+        text-transform: uppercase;
+        border-bottom: 1px solid var(--rule-strong);
+        padding: 12px 0 12px;
+      }
+      .row.head-row .cell {
+        padding: 0 12px;
+      }
+      .row.head-row .seat { color: var(--gold); }
+
+      .row.doctor {
+        padding: 18px 0;
+      }
+      .row.doctor:hover::before {
+        opacity: 1;
+      }
+
+      .cell {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 0 12px;
+        min-width: 0;
+        border-left: 1px dashed var(--rule);
+      }
+      .cell:first-child {
+        border-left: none;
+      }
+
+      /* Seat number */
+      .seat {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--gold);
+        text-align: center;
+        align-items: center;
+        letter-spacing: 0.08em;
+      }
+
+      /* Name + initials */
+      .name-cell {
+        display: grid;
+        grid-template-columns: 36px 1fr;
+        gap: 12px;
+        align-items: center;
+      }
+      .mono-tag {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--ink);
+        background: var(--gold);
+        height: 36px;
+        border-radius: 6px;
+        display: grid;
+        place-items: center;
+        letter-spacing: 0.06em;
+      }
+      .name-stack .name {
+        font-family: "DM Serif Display", serif;
+        font-size: 20px;
+        line-height: 1.05;
+        color: var(--paper);
+        letter-spacing: -0.005em;
+      }
+      .name-stack .id {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 9.5px;
+        letter-spacing: 0.18em;
+        color: var(--paper-3);
+        text-transform: uppercase;
+        margin-top: 4px;
+      }
+
+      .title-cell {
+        font-family: "Inter", sans-serif;
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--paper);
+        letter-spacing: 0.01em;
+      }
+      .title-cell .sub {
+        margin-top: 3px;
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 9.5px;
+        color: var(--paper-3);
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+      }
+
+      .room-cell {
+        font-family: "IBM Plex Mono", monospace;
+        text-align: center;
+        align-items: center;
+      }
+      .room-cell .num {
+        font-size: 22px;
+        font-weight: 600;
+        color: var(--rust);
+        letter-spacing: 0.06em;
+        line-height: 1;
+      }
+      .room-cell .floor {
+        font-size: 9.5px;
+        color: var(--paper-3);
+        letter-spacing: 0.16em;
+        margin-top: 4px;
+        text-transform: uppercase;
+      }
+
+      .hours {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 11px;
+        text-align: center;
+        align-items: center;
+        color: var(--paper);
+        letter-spacing: 0.02em;
+        line-height: 1.25;
+      }
+      .hours.off {
+        color: var(--paper-3);
+      }
+      .hours .h-from {
+        display: block;
+      }
+      .hours .h-to {
+        display: block;
+        color: var(--paper-3);
+        font-size: 10px;
+        letter-spacing: 0.04em;
+      }
+      .hours.weekend {
+        color: var(--paper-3);
+      }
+
+      /* ───── FOOT ───── */
+      .foot {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 24px;
+        margin-top: 22px;
+        padding-top: 14px;
+        border-top: 1px solid var(--rule-strong);
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 10.5px;
+        letter-spacing: 0.22em;
+        color: var(--paper-3);
+        text-transform: uppercase;
+        flex-wrap: wrap;
+      }
+      .foot .legend {
+        display: inline-flex;
+        gap: 18px;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+      .foot .legend span {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .foot .legend i {
+        width: 10px;
+        height: 10px;
+        border-radius: 2px;
+        background: var(--gold);
+        display: inline-block;
+      }
+      .foot .legend i.rust { background: var(--rust); }
+      .foot .legend i.off  { background: var(--paper-4); }
+
+      /* ───── RESPONSIVE ───── */
+      @media (max-width: 1100px) {
+        .row {
+          grid-template-columns: 48px 1.6fr 1.2fr 0.9fr;
+        }
+        .row .day {
+          display: none;
+        }
+        .row.doctor .week-strip {
+          grid-column: 1 / -1;
+          display: grid;
+          grid-template-columns: repeat(7, 1fr);
+          gap: 4px;
+          padding: 10px 12px 0;
+          border-top: 1px dashed var(--rule);
+          margin-top: 10px;
+        }
+        .row.doctor .week-strip .day {
+          display: block !important;
+          padding: 4px 2px;
+          text-align: center;
+          font-family: "IBM Plex Mono", monospace;
+          font-size: 9.5px;
+        }
+      }
+      @media (min-width: 1101px) {
+        .row.doctor .week-strip {
+          display: contents;
+        }
+      }
+
+      /* ───── PRINT ───── */
+      @media print {
+        body { background: #fff; color: #000; }
+        .board { padding: 16px; }
+        .head, .row, .foot, .subhead, .corner { color: #000; border-color: rgba(0,0,0,0.2); }
+        .corner { display: none; }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="board">
+      <span class="corner tl"></span>
+      <span class="corner tr"></span>
+      <span class="corner bl"></span>
+      <span class="corner br"></span>
+
+      <header class="head">
+        <div class="left">
+          Aurora Medical Center<br /><b>Information Board · No. 02</b>
+        </div>
+        <div class="center">
+          <div class="pre mono">— Today's attending physicians —</div>
+          <h1>Doctors <em>on duty</em></h1>
+        </div>
+        <div class="right">
+          Week of<br /><b id="w-range">19 — 25 MAY 2026</b>
+        </div>
+      </header>
+
+      <div class="subhead">
+        <span class="ticker"><span class="pulse"></span>Live · Updated weekly</span>
+        <span id="now-label">All times in 24-hour local format</span>
+      </div>
+
+      <div class="table">
+        <div class="row head-row" aria-hidden="true">
+          <div class="cell seat">№</div>
+          <div class="cell">Doctor</div>
+          <div class="cell">Title</div>
+          <div class="cell">Room</div>
+          <div class="cell day">Mon</div>
+          <div class="cell day">Tue</div>
+          <div class="cell day">Wed</div>
+          <div class="cell day">Thu</div>
+          <div class="cell day">Fri</div>
+          <div class="cell day">Sat</div>
+          <div class="cell day">Sun</div>
+        </div>
+        <div id="rows-host"></div>
+      </div>
+
+      <footer class="foot">
+        <div class="legend">
+          <span><i></i>On duty</span>
+          <span><i class="rust"></i>Room</span>
+          <span><i class="off"></i>Day off</span>
+        </div>
+        <div id="updated">Last updated: 20 May 2026 · 09:00</div>
+      </footer>
+    </main>
+
+    <!--
+      ════════════════════════════════════════════════
+       STAND DATA  ──  Same shape as stand.html so the
+       two variants stay in sync. Edit to update the
+       board on next reload.
+      ════════════════════════════════════════════════
+    -->
+    <script>
+      const STAND_DATA = {
+        clinic: { name: "Aurora Medical Center" },
+        weekRange: "19 — 25 MAY 2026",
+        updated: "20 May 2026 · 09:00",
+        doctors: [
+          { name: "Dr. Eleanor Park",    title: "Cardiologist",       room: 203, floor: 2, week: { mon: "09:00–13:00", tue: "—", wed: "09:00–13:00", thu: "—", fri: "09:00–13:00", sat: "—", sun: "—" } },
+          { name: "Dr. Hiro Tanaka",     title: "Pediatrician",       room: 105, floor: 1, week: { mon: "10:00–16:00", tue: "—", wed: "10:00–16:00", thu: "—", fri: "10:00–16:00", sat: "—", sun: "—" } },
+          { name: "Dr. Sofia Reyes",     title: "Dermatologist",      room: 211, floor: 2, week: { mon: "—", tue: "14:00–18:00", wed: "14:00–18:00", thu: "14:00–18:00", fri: "—", sat: "—", sun: "—" } },
+          { name: "Dr. Marcus Chen",     title: "Neurologist",        room: 312, floor: 3, week: { mon: "08:00–12:00", tue: "08:00–12:00", wed: "08:00–12:00", thu: "08:00–12:00", fri: "08:00–12:00", sat: "—", sun: "—" } },
+          { name: "Dr. Anya Volkov",     title: "Family Physician",   room: 102, floor: 1, week: { mon: "08:00–18:00", tue: "08:00–18:00", wed: "08:00–18:00", thu: "08:00–18:00", fri: "08:00–18:00", sat: "10:00–14:00", sun: "—" } },
+          { name: "Dr. Liam O'Connor",   title: "Orthopedic Surgeon", room: 305, floor: 3, week: { mon: "13:00–17:00", tue: "13:00–17:00", wed: "—", thu: "—", fri: "13:00–17:00", sat: "—", sun: "—" } },
+          { name: "Dr. Yara Nasser",     title: "Ophthalmologist",    room: 217, floor: 2, week: { mon: "09:00–13:00", tue: "—", wed: "09:00–13:00", thu: "—", fri: "09:00–13:00", sat: "—", sun: "—" } },
+          { name: "Dr. Adaeze Okoye",    title: "Endocrinologist",    room: 320, floor: 3, week: { mon: "—", tue: "10:00–16:00", wed: "10:00–16:00", thu: "10:00–16:00", fri: "—", sat: "—", sun: "—" } },
+          { name: "Dr. Noah Bennett",    title: "General Surgeon",    room: 208, floor: 2, week: { mon: "07:30–11:30", tue: "07:30–11:30", wed: "—", thu: "07:30–11:30", fri: "—", sat: "—", sun: "—" } },
+        ],
+      };
+
+      const DAYS = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"];
+
+      function initials(name) {
+        return name
+          .replace(/Dr\.?\s*/i, "")
+          .split(/\s+/)
+          .map((w) => w[0])
+          .filter(Boolean)
+          .slice(0, 2)
+          .join("")
+          .toUpperCase();
+      }
+
+      function escapeHtml(s) {
+        return String(s).replace(
+          /[&<>\"']/g,
+          (c) =>
+            ({
+              "&": "&amp;",
+              "<": "&lt;",
+              ">": "&gt;",
+              '"': "&quot;",
+              "'": "&#39;",
+            })[c]
+        );
+      }
+
+      function pad2(n) {
+        return String(n).padStart(2, "0");
+      }
+
+      function renderHours(hours, isWeekend) {
+        if (!hours || hours === "—") {
+          return `<div class="cell hours off day"><span>—</span></div>`;
+        }
+        // Split "09:00–13:00" into from/to lines for the timetable look.
+        const m = hours.match(/(\d{2}:\d{2})[^\d](\d{2}:\d{2})/);
+        const from = m ? m[1] : hours;
+        const to = m ? m[2] : "";
+        return `
+          <div class="cell hours day${isWeekend ? " weekend" : ""}">
+            <span class="h-from">${escapeHtml(from)}</span>
+            ${to ? `<span class="h-to">${escapeHtml(to)}</span>` : ""}
+          </div>`;
+      }
+
+      function render() {
+        document.getElementById("w-range").textContent = STAND_DATA.weekRange;
+        document.getElementById("updated").textContent =
+          `Last updated: ${STAND_DATA.updated}`;
+
+        const host = document.getElementById("rows-host");
+        host.innerHTML = STAND_DATA.doctors
+          .map((d, idx) => {
+            const dayCells = DAYS.map((day) =>
+              renderHours(d.week[day], day === "sat" || day === "sun")
+            ).join("");
+            return `
+              <article class="row doctor">
+                <div class="cell seat">${pad2(idx + 1)}</div>
+                <div class="cell name-cell">
+                  <div class="mono-tag">${initials(d.name)}</div>
+                  <div class="name-stack">
+                    <div class="name">${escapeHtml(d.name)}</div>
+                    <div class="id">ID · MD-${pad2(idx + 1)}${pad2(d.room)}</div>
+                  </div>
+                </div>
+                <div class="cell title-cell">
+                  ${escapeHtml(d.title)}
+                  <div class="sub">Floor ${d.floor} · Wing ${
+                    d.floor === 1 ? "A" : d.floor === 2 ? "B" : "C"
+                  }</div>
+                </div>
+                <div class="cell room-cell">
+                  <div class="num">${d.room}</div>
+                  <div class="floor">Floor ${d.floor}</div>
+                </div>
+                ${dayCells}
+              </article>
+            `;
+          })
+          .join("");
+      }
+
+      document.addEventListener("DOMContentLoaded", render);
+    </script>
+  </body>
+</html>
